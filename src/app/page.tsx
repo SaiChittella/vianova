@@ -1,8 +1,9 @@
+import Dashboard from "./dashboard/page";
 
 export default async function Home() {
 	return (
 		<div>
-			<p>Hello World</p>
+			<Dashboard></Dashboard>
 		</div>
 	);
 }
