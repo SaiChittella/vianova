@@ -8,7 +8,7 @@ interface SignupProps {
 
 export default function SignupForm({ signupAction }: SignupProps) {
 	async function clientLoginAction(formData: FormData) {
-		// TODO: Implement Error handling
+		// TODO: Implement Error handling and display alerts if the user enters the wrong information
 		await signupAction(formData);
 	}
 

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/utils/supabase/server";
+import createSuperClient from "../utils/supabase/superclient";
 
 export async function login(formData: FormData) {
 	const supabase = await createClient();
@@ -26,7 +27,7 @@ export async function login(formData: FormData) {
 }
 
 export async function signup(formData: FormData) {
-	const supabase = await createClient();
+	const supabase = await createSuperClient();
 
 	// type-casting here for convenience
 	// in practice, you should validate your inputs
@@ -35,14 +36,27 @@ export async function signup(formData: FormData) {
 		password: formData.get("password") as string,
 	};
 
-	const { error } = await supabase.auth.signUp(data);
+	const { data: userData, error } = await supabase.auth.signUp(data);
 
-	const { error: insertError } = await supabase.from("restaurants").insert({
-		email: formData.get("restaurantEmail"),
-		name: formData.get("restaurantName"),
+	const { data: restaurantData, error: insertError } = await supabase
+		.from("restaurants")
+		.insert({
+			email: formData.get("restaurantEmail"),
+			name: formData.get("restaurantName"),
+		})
+		.select()
+		.single();
+
+	const { error: userError } = await supabase.from("roles").insert({
+		user_id: userData.user?.id,
+		role: "admin",
+		restaurant_id: restaurantData?.id,
 	});
 
-	console.log(insertError?.message);
+  if(userError){
+    // TODO: Handle Errors
+    alert("Error: " + userError);
+  }
 
 	if (error) {
 		redirect("/error");
