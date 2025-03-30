@@ -1,6 +1,5 @@
-import Login from "./auth/login/page";
 
-export default function Home() {
+export default async function Home() {
 	return (
 		<div>
 			<p>Hello World</p>
