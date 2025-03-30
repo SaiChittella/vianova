@@ -40,7 +40,6 @@ export default function LoginForm({ logInAction }: LoginProps) {
 					/>
 				</div>
 				<div className="flex flex-col">
-					
 					{/* TODO: Add forgot password page */}
 					<Link href="">
 						<p className="text-xs flex justify-center align-center text-[#90AC95] relative bottom-2">
@@ -50,6 +49,7 @@ export default function LoginForm({ logInAction }: LoginProps) {
 					<input
 						className="hover:cursor-pointer rounded-full px-10 py-4 space-y-5 bg-[#388E3C] text-white font-bold mt-4 text-xl"
 						type="submit"
+						value="Log in"
 					/>
 				</div>
 			</form>
