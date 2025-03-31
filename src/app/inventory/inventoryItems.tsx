@@ -36,10 +36,12 @@ import countStock from "@/lib/utils/countInventory";
 
 interface InventoryComponentProps {
 	inventoryItems: any[] | null;
+	isStaff: boolean;
 }
 
 export default function InventoryComponent({
 	inventoryItems,
+	isStaff,
 }: InventoryComponentProps) {
 	const [searchQuery, setSearchQuery] = useState("");
 
@@ -54,15 +56,18 @@ export default function InventoryComponent({
 					<CardTitle className="text-[#2e6930] text-xl">
 						Inventory Items
 					</CardTitle>
-					<div className="flex items-center gap-2">
-						<Button
-							size="sm"
-							className="bg-[#2e6930] hover:bg-[#1e4920] hover:cursor-pointer"
-						>
-							<Plus className="h-4 w-4 mr-1" />
-							Add Item
-						</Button>
-					</div>
+
+					{!isStaff ? (
+						<div className="flex items-center gap-2">
+							<Button
+								size="sm"
+								className="bg-[#2e6930] hover:bg-[#1e4920] hover:cursor-pointer"
+							>
+								<Plus className="h-4 w-4 mr-1" />
+								Add Item
+							</Button>
+						</div>
+					) : null}
 				</div>
 			</CardHeader>
 			<CardContent>

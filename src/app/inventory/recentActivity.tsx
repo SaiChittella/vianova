@@ -11,13 +11,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
@@ -25,6 +18,25 @@ export default function RecentActivity({ initialData, fullData }: any) {
 	const [activityDialogOpen, setActivityDialogOpen] = useState(false);
 	const [activityFilter, setActivityFilter] = useState("all");
 	const [activitySearchQuery, setActivitySearchQuery] = useState("");
+
+	fullData.sort(
+		(a: any, b: any) =>
+			new Date(b.transaction_date).getTime() -
+			new Date(a.transaction_date).getTime()
+	);
+    initialData.sort(
+		(a: any, b: any) =>
+			new Date(b.transaction_date).getTime() -
+			new Date(a.transaction_date).getTime()
+	);
+
+	const filteredActivities = fullData.filter((activity: any) => {
+		const matchesSearch = activity.ingredients.name
+			.toLowerCase()
+			.includes(activitySearchQuery.toLowerCase());
+
+		return matchesSearch;
+	});
 
 	return (
 		<div>
@@ -64,7 +76,10 @@ export default function RecentActivity({ initialData, fullData }: any) {
 				onOpenChange={setActivityDialogOpen}
 			>
 				<DialogTrigger asChild>
-					<Button variant="link" className="text-[#2e6930] p-0">
+					<Button
+						variant="link"
+						className="text-[#2e6930] p-0 hover:cursor-pointer"
+					>
 						View all activity
 					</Button>
 				</DialogTrigger>
@@ -87,36 +102,12 @@ export default function RecentActivity({ initialData, fullData }: any) {
 								}
 							/>
 						</div>
-						<Select
-							defaultValue="all"
-							onValueChange={(value) => setActivityFilter(value)}
-						>
-							<SelectTrigger className="w-[180px]">
-								<SelectValue placeholder="Filter by type" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="all">
-									All Activities
-								</SelectItem>
-								<SelectItem value="stock_update">
-									Stock Updates
-								</SelectItem>
-								<SelectItem value="waste">
-									Waste Reports
-								</SelectItem>
-								<SelectItem value="order">Orders</SelectItem>
-								<SelectItem value="alert">Alerts</SelectItem>
-								<SelectItem value="count">
-									Inventory Counts
-								</SelectItem>
-							</SelectContent>
-						</Select>
 					</div>
 
 					<div className="overflow-y-auto flex-1 pr-2">
 						<div className="space-y-4">
-							{fullData.length > 0 ? (
-								fullData.map((activity: any) => (
+							{filteredActivities.length > 0 ? (
+								filteredActivities.map((activity: any) => (
 									<div
 										key={activity.id}
 										className="p-3 border border-[#e8f2e8] rounded-lg"
@@ -159,15 +150,15 @@ export default function RecentActivity({ initialData, fullData }: any) {
 											<Badge
 												className={
 													activity.transaction_type ===
-													"waste"
-														? "bg-red-100 text-red-800 hover:bg-red-100"
-														: activity.transaction_type ===
-														  "alert"
-														? "bg-amber-100 text-amber-800 hover:bg-amber-100"
-														: activity.transaction_type ===
-														  "order"
+													"purchase"
 														? "bg-blue-100 text-blue-800 hover:bg-blue-100"
-														: "bg-green-100 text-green-800 hover:bg-green-100"
+														: activity.transaction_type ===
+														  "adjustment"
+														? "bg-orange-100 text-orange-800 hover:bg-orange-100"
+														: activity.transaction_type ===
+														  "sale"
+														? "bg-purple-100 text-purple-800 hover:bg-purple-100"
+														: "bg-red-100 text-red-800 hover:bg-red-100"
 												}
 											>
 												{activity.transaction_type.replace(

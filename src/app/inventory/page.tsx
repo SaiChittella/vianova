@@ -20,6 +20,23 @@ export default async function InventoryServer() {
 
 	const supabase = await createClient();
 
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
+
+	const { data: roleData, error: roleError } = await supabase
+		.from("roles")
+		.select()
+		.eq("user_id", user?.id)
+		.single();
+
+	if (roleError) {
+		console.error("Error fetching role data:", roleError);
+		return null;
+	}
+
+	const isStaff = roleData?.role === "staff" ? true : false;
+
 	const { data: inventoryData, error: inventoryError } = await supabase
 		.from("ingredients")
 		.select("*, inventory_transactions(quantity_change)");
@@ -43,8 +60,6 @@ export default async function InventoryServer() {
 		);
 		return null;
 	}
-
-	console.log("DATA: " + JSON.stringify(inventoryTransactionsData, null, 4));
 
 	if (inventoryData) {
 		for (let i = 0; i < inventoryData?.length; i++) {
@@ -127,7 +142,10 @@ export default async function InventoryServer() {
 
 				<div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 					<div className="lg:col-span-3">
-						<InventoryComponent inventoryItems={inventoryData} />
+						<InventoryComponent
+							inventoryItems={inventoryData}
+							isStaff={isStaff}
+						/>
 					</div>
 
 					<div className="lg:col-span-1 space-y-6">
