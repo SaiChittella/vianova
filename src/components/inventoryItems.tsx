@@ -20,7 +20,8 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import countStock from "@/lib/utils/countInventory";
-import AddItems from "@/components/AddItems";
+import IngredientDialog from "@/components/Ingredients/IngredientDialog";
+import { addIngredient } from "@/lib/actions/ingredients";
 
 interface InventoryComponentProps {
 	inventoryItems: any[] | null;
@@ -32,12 +33,14 @@ export default function InventoryComponent({
 	isStaff,
 }: InventoryComponentProps) {
 	const [searchQuery, setSearchQuery] = useState("");
+	const [addItem, setAddItem] = useState(false);
 
 	const filteredItems = inventoryItems?.filter((item) =>
 		item.name.toLowerCase().includes(searchQuery.toLowerCase())
 	);
 
 	return (
+		<>
 		<Card className="border border-[#e8f2e8] rounded-2xl">
 			<CardHeader className="pb-2">
 				<div className="flex justify-between items-center">
@@ -47,7 +50,10 @@ export default function InventoryComponent({
 
 					{!isStaff ? (
 						<div className="flex items-center gap-2">
-							<AddItems></AddItems>
+							<Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={() => setAddItem(true)}>
+								<Plus className="h-4 w-4 mr-1" />
+								Add Ingredient
+							</Button>
 						</div>
 					) : null}
 				</div>
@@ -99,9 +105,9 @@ export default function InventoryComponent({
 										status = "Low Stock";
 									} else if (
 										quantity >
-											item.low_inventory_threshold &&
+										item.low_inventory_threshold &&
 										quantity <
-											item.medium_inventory_threshold
+										item.medium_inventory_threshold
 									) {
 										status = "Medium Stock";
 									}
@@ -121,9 +127,9 @@ export default function InventoryComponent({
 														status === "In Stock"
 															? "bg-green-100 text-green-800 hover:bg-green-100"
 															: status ===
-															  "Low Stock"
-															? "bg-red-100 text-red-800 hover:bg-red-100"
-															: "bg-amber-100 text-amber-800 hover:bg-amber-100"
+																"Low Stock"
+																? "bg-red-100 text-red-800 hover:bg-red-100"
+																: "bg-amber-100 text-amber-800 hover:bg-amber-100"
 													}
 												>
 													{status}
@@ -177,5 +183,8 @@ export default function InventoryComponent({
 				</div>
 			</CardContent>
 		</Card>
+
+		<IngredientDialog open={addItem} setOpen={setAddItem} title="Add Inventory Item" description="Add a new item to your inventory. Fill in all the details below." buttonText="Add Ingredient" serverAction={addIngredient}/>
+		</>
 	);
 }
