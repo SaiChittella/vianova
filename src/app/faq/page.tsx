@@ -26,44 +26,42 @@ export default function FAQPage() {
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1" className="border-b border-[#e8f2e8]">
                 <AccordionTrigger className="text-[#2e6930] font-medium hover:text-[#2e6930] hover:no-underline">
-                  Can I track food waste and identify inefficiencies?
+                  How do user roles and permissions work in the system?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-600">
-                  Yes! The system allows you to log food waste and categorize the reason (spoilage, over-portioning,
-                  plate waste, etc.). The AI-powered insights feature will analyze patterns and provide recommendations
-                  to reduce waste and improve efficiency.
+                  The system supports different user roles, such as Admin, Manager, and Staff. Admins have full access
+                  to all features, while Managers and Staff have limited permissions based on their roles.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-2" className="border-b border-[#e8f2e8]">
                 <AccordionTrigger className="text-[#2e6930] font-medium hover:text-[#2e6930] hover:no-underline">
-                  How does the system notify me about low stock or expiring items?
+                  How can I update and manage inventory?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-600">
-                  You will receive real-time alerts via email or in-app notifications when stock is running low or when
-                  an ingredient is approaching its expiration date. You can also customize alert thresholds based on
-                  your restaurant's needs.
+                  You can add, update, and remove inventory items through the system's Inventory Management section. It
+                  allows you to track stock levels and monitor expiration dates for perishable items.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-3" className="border-b border-[#e8f2e8]">
                 <AccordionTrigger className="text-[#2e6930] font-medium hover:text-[#2e6930] hover:no-underline">
-                  Can I integrate this system with my restaurant's POS and suppliers?
+                  Can I track food waste and identify inefficiencies?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-600">
-                  Our system supports POS integration to sync stock levels accurately. You can also connect with
-                  supplier APIs to automate purchase orders when stock drops below a set level.
+                  Yes! The system allows you to log food waste and categorize the reason (spoilage, over-portioning,
+                  plate waste, etc.). You can use insights from the system to optimize portions and reduce unnecessary
+                  waste.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-4" className="border-b-0">
                 <AccordionTrigger className="text-[#2e6930] font-medium hover:text-[#2e6930] hover:no-underline">
-                  How do I manage multiple restaurant locations within the system?
+                  How do I generate reports on inventory usage?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-600">
-                  If you own or manage multiple restaurants, you can access them from a single dashboard. The system
-                  allows you to switch between locations, set role-based access for managers and staff, and generate
-                  reports for individual or all locations.
+                  The system provides downloadable reports on inventory trends, waste tracking, and usage history. You
+                  can use these reports to monitor stock efficiency and make data-driven decisions.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -81,7 +79,7 @@ export default function FAQPage() {
               </p>
               <Button
                 className="bg-[#2e6930] hover:bg-[#1e4920]"
-                onClick={() => (window.location.href = "mailto:contact@vianova.com")}
+                onClick={() => (window.location.href = "mailto:btanush25@outlook.com")}
               >
                 Contact Support
               </Button>
