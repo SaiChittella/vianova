@@ -1,22 +1,9 @@
 "use client";
 import { useState } from "react";
-import {
-	AlertCircle,
-	ArrowUpDown,
-	ChevronDown,
-	Plus,
-	Search,
-	ShoppingCart,
-} from "lucide-react";
+import { ArrowUpDown, ChevronDown, Plus, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
 	Table,
@@ -33,6 +20,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import countStock from "@/lib/utils/countInventory";
+import AddItems from "@/components/AddItems";
 
 interface InventoryComponentProps {
 	inventoryItems: any[] | null;
@@ -59,13 +47,7 @@ export default function InventoryComponent({
 
 					{!isStaff ? (
 						<div className="flex items-center gap-2">
-							<Button
-								size="sm"
-								className="bg-[#2e6930] hover:bg-[#1e4920] hover:cursor-pointer"
-							>
-								<Plus className="h-4 w-4 mr-1" />
-								Add Item
-							</Button>
+							<AddItems></AddItems>
 						</div>
 					) : null}
 				</div>

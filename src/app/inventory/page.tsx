@@ -40,7 +40,6 @@ export default async function InventoryServer() {
 	const { data: inventoryData, error: inventoryError } = await supabase
 		.from("ingredients")
 		.select("*, inventory_transactions(quantity_change)");
-
 	if (inventoryError) {
 		console.error("Error fetching inventory data:", inventoryError);
 		return null;
@@ -114,7 +113,7 @@ export default async function InventoryServer() {
 						</CardHeader>
 						<CardContent>
 							<div className="text-3xl font-semibold text-orange-500">
-								{lowStockCount}
+								{mediumStockCount}
 							</div>
 							<p className="text-sm text-gray-500">
 								Items above minimum threshold but are
