@@ -11,10 +11,7 @@ export default async function MenuItems() {
     console.log(JSON.stringify(menuItems,null,4))
 
     return (
-        <div className="flex min-h-screen bg-white">
-
-            {/* Main content */}
-            <div className="flex-1 p-8">
+            <div className="flex-1">
                 <div className="mb-8">
                     <div className="flex items-center gap-2">
                         <Link href="/admin" className="text-[#2e6930] hover:underline">
@@ -34,7 +31,7 @@ export default async function MenuItems() {
                 
             </div>
             
-        </div>
+
     )
 }
 

@@ -17,8 +17,7 @@ export default async function page() {
 
     return (
 
-        <div className='flex min-h-screen bg-white'>
-            <div className='flex-1 p-8'>
+            <div className='flex-1'>
 
                 <div className="mb-8">
                     <div className="flex items-center gap-2">
@@ -39,7 +38,6 @@ export default async function page() {
                 <RestaurantForm restaurant={restaurant} editRestaurant={editRestaurant} deleteRestaurant={deleteRestaurant}></RestaurantForm>
             </div>
 
-        </div>
 
     )
 }

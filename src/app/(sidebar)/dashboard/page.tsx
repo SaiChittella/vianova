@@ -2,10 +2,8 @@ import Sidebar from "@/components/Sidebar";
 
 export default function Dashboard() {
 	return (
-		<div className="flex flex-row">
-			<Sidebar></Sidebar>
-			{/* TODO: Make the screen a little bit more responsive - for mobile screens */}
-			<div className="lg:px-52 lg:py-15 pl-40 pr-7 py-5 space-y-3 w-full overflow-y-scroll">
+			<div className="space-y-3 w-full overflow-y-scroll">
+				{/* TODO: Make the screen a little bit more responsive - for mobile screens */}
 				<p className="text-[#1B5E20] font-semibold text-4xl">
 					Dashboard
 				</p>
@@ -52,6 +50,5 @@ export default function Dashboard() {
 					</div>
 				</div>
 			</div>
-		</div>
 	);
 }

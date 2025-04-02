@@ -35,9 +35,9 @@ export default async function AdminDashboard() {
     );
 
     return (
-        <div className="flex min-h-screen bg-white">
 
-            <div className="flex-1 p-8">
+
+            <div className="flex-1">
                 <div className="mb-8">
                     <div className="flex items-center">
                         <ShieldCheck className="h-8 w-8 text-[#2e6930] mr-3" />
@@ -155,6 +155,6 @@ export default async function AdminDashboard() {
                     </CardContent>
                 </Card>
             </div>
-        </div>
+
     )
 }

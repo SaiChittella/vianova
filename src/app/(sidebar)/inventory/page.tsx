@@ -2,10 +2,10 @@ import { AlertCircle, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Sidebar from "@/components/Sidebar";
-import InventoryComponent from "../../components/inventoryItems";
+import InventoryComponent from "@/components/inventoryItems";
 import { createClient } from "@/lib/utils/supabase/server";
 import countStock from "@/lib/utils/countInventory";
-import RecentActivity from "../../components/RecentActivity";
+import RecentActivity from "@/components/RecentActivity";
 import CreateOrder from "@/components/CreateOrder";
 
 export default async function InventoryServer() {
@@ -81,9 +81,7 @@ export default async function InventoryServer() {
 	);
 
 	return (
-		<div className="flex min-h-screen bg-white">
-			<Sidebar></Sidebar>
-			<div className="flex-1 pl-40 pr-7 py-10">
+			<div className="flex-1">
 				<div className="mb-8">
 					<h1 className="text-4xl font-medium text-[#2e6930]">
 						Inventory
@@ -194,6 +192,6 @@ export default async function InventoryServer() {
 					</div>
 				</div>
 			</div>
-		</div>
+
 	);
 }
