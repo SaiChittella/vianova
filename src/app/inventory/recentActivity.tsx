@@ -16,19 +16,7 @@ import { Input } from "@/components/ui/input";
 
 export default function RecentActivity({ initialData, fullData }: any) {
 	const [activityDialogOpen, setActivityDialogOpen] = useState(false);
-	const [activityFilter, setActivityFilter] = useState("all");
 	const [activitySearchQuery, setActivitySearchQuery] = useState("");
-
-	fullData.sort(
-		(a: any, b: any) =>
-			new Date(b.transaction_date).getTime() -
-			new Date(a.transaction_date).getTime()
-	);
-    initialData.sort(
-		(a: any, b: any) =>
-			new Date(b.transaction_date).getTime() -
-			new Date(a.transaction_date).getTime()
-	);
 
 	const filteredActivities = fullData.filter((activity: any) => {
 		const matchesSearch = activity.ingredients.name

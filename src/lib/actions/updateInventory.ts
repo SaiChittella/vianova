@@ -25,7 +25,7 @@ export async function updateInventory(newItem: updateInventoryProps) {
 	const transaction = {
 		transaction_type: "adjustment",
 		quantity_change: newItem.quantity,
-		ingredient_id: ingredientId,
+		ingredient_id: ingredientId?.id,
 	};
 
 	if (insertIngredientsError) {

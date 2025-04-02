@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
@@ -74,6 +73,12 @@ export default async function InventoryServer() {
 			}
 		}
 	}
+
+	inventoryTransactionsData.sort(
+		(a: any, b: any) =>
+			new Date(b.transaction_date).getTime() -
+			new Date(a.transaction_date).getTime()
+	);
 
 	return (
 		<div className="flex min-h-screen bg-white">
