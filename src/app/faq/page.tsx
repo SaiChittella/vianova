@@ -23,45 +23,98 @@ export default function FAQPage() {
             <CardTitle className="text-[#2e6930] text-xl">Help Center</CardTitle>
           </CardHeader>
           <CardContent className="pt-4">
+            <style jsx global>{`
+              .faq-accordion-trigger {
+                transition: all 0.3s ease;
+              }
+              
+              .faq-accordion-trigger[data-state="open"] {
+                background-color: #f5f9f5;
+                border-radius: 0.5rem;
+              }
+              
+              .faq-accordion-content {
+                overflow: hidden;
+                transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+              }
+              
+              .faq-accordion-content[data-state="open"] {
+                animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+              }
+              
+              .faq-accordion-content[data-state="closed"] {
+                animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+              }
+              
+              @keyframes slideDown {
+                from {
+                  height: 0;
+                  opacity: 0;
+                }
+                to {
+                  height: var(--radix-accordion-content-height);
+                  opacity: 1;
+                }
+              }
+              
+              @keyframes slideUp {
+                from {
+                  height: var(--radix-accordion-content-height);
+                  opacity: 1;
+                }
+                to {
+                  height: 0;
+                  opacity: 0;
+                }
+              }
+            `}</style>
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1" className="border-b border-[#e8f2e8]">
-                <AccordionTrigger className="text-[#2e6930] font-medium hover:text-[#2e6930] hover:no-underline">
+                <AccordionTrigger className="text-[#2e6930] font-medium hover:text-[#2e6930] hover:no-underline cursor-text p-4 faq-accordion-trigger">
                   How do user roles and permissions work in the system?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-600">
-                  The system supports different user roles, such as Admin, Manager, and Staff. Admins have full access
-                  to all features, while Managers and Staff have limited permissions based on their roles.
+                <AccordionContent className="text-gray-600 px-4 faq-accordion-content">
+                  <div className="py-3">
+                    The system supports different user roles, such as Admin, Manager, and Staff. Admins have full access
+                    to all features, while Managers and Staff have limited permissions based on their roles. You can
+                    customize access levels in the User Management section.
+                  </div>
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-2" className="border-b border-[#e8f2e8]">
-                <AccordionTrigger className="text-[#2e6930] font-medium hover:text-[#2e6930] hover:no-underline">
+                <AccordionTrigger className="text-[#2e6930] font-medium hover:text-[#2e6930] hover:no-underline cursor-text p-4 faq-accordion-trigger">
                   How can I update and manage inventory?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-600">
-                  You can add, update, and remove inventory items through the system's Inventory Management section. It
-                  allows you to track stock levels and monitor expiration dates for perishable items.
+                <AccordionContent className="text-gray-600 px-4 faq-accordion-content">
+                  <div className="py-3">
+                    You can add, update, and remove inventory items through the system's Inventory Management section.
+                    It allows you to track stock levels.
+                  </div>
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-3" className="border-b border-[#e8f2e8]">
-                <AccordionTrigger className="text-[#2e6930] font-medium hover:text-[#2e6930] hover:no-underline">
+                <AccordionTrigger className="text-[#2e6930] font-medium hover:text-[#2e6930] hover:no-underline cursor-text p-4 faq-accordion-trigger">
                   Can I track food waste and identify inefficiencies?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-600">
-                  Yes! The system allows you to log food waste and categorize the reason (spoilage, over-portioning,
-                  plate waste, etc.). You can use insights from the system to optimize portions and reduce unnecessary
-                  waste.
+                <AccordionContent className="text-gray-600 px-4 faq-accordion-content">
+                  <div className="py-3">
+                    Yes! The system allows you to log food waste and categorize from the predetermined reasons. You can
+                    use insights from the system to optimize portions and reduce unnecessary waste.
+                  </div>
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-4" className="border-b-0">
-                <AccordionTrigger className="text-[#2e6930] font-medium hover:text-[#2e6930] hover:no-underline">
+                <AccordionTrigger className="text-[#2e6930] font-medium hover:text-[#2e6930] hover:no-underline cursor-text p-4 faq-accordion-trigger">
                   How do I generate reports on inventory usage?
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-600">
-                  The system provides downloadable reports on inventory trends, waste tracking, and usage history. You
-                  can use these reports to monitor stock efficiency and make data-driven decisions.
+                <AccordionContent className="text-gray-600 px-4 faq-accordion-content">
+                  <div className="py-3">
+                    The system provides downloadable reports on inventory trends, waste tracking, and usage history. You
+                    can use these reports to monitor stock efficiency and make data-driven decisions.
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
