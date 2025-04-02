@@ -61,8 +61,6 @@ export default async function WastageServer() {
 		.from("wastages")
 		.select("*, menu_items!inner(*)");
 
-	console.log(JSON.stringify(wastageData, null, 4));
-
 	if (wastageDataError) {
 		console.error("Error fetching wastage data:", wastageDataError);
 		return;
@@ -75,6 +73,10 @@ export default async function WastageServer() {
 		totalWaste += wastageData[i].quantity;
 		totalCost += wastageData[i].quantity * wastageData[i].menu_items.price;
 	}
+
+	const { data: menuItemsData, error: menuItemsError } = await supabase
+		.from("menu_items")
+		.select("*");
 
 	return (
 		<div className="flex min-h-screen bg-white">
@@ -137,7 +139,10 @@ export default async function WastageServer() {
 				</div>
 				<div>
 					<div>
-						<WasteLog wastageData={wastageData}></WasteLog>
+						<WasteLog
+							wastageData={wastageData}
+							menuItems={menuItemsData!}
+						></WasteLog>
 					</div>
 				</div>
 			</div>

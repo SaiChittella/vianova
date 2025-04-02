@@ -46,13 +46,14 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import LogWaste from "@/components/LogWaste";
 
 interface WasteLogProps {
 	wastageData: any[];
+	menuItems: any[];
 }
 
-export default function WasteLog({ wastageData }: WasteLogProps) {
-	const [addWasteDialogOpen, setAddWasteDialogOpen] = useState(false);
+export default function WasteLog({ wastageData, menuItems }: WasteLogProps) {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedTab, setSelectedTab] = useState("all");
 
@@ -65,13 +66,14 @@ export default function WasteLog({ wastageData }: WasteLogProps) {
 
 		const matchesTab =
 			selectedTab === "all" ||
-			(selectedTab === "spoilage" && item.reason === "Spoilage") ||
+			(selectedTab === "spoilage" && item.waste_reason === "Spoilage") ||
 			(selectedTab === "overproduction" &&
 				item.reason === "Overproduction") ||
-			(selectedTab === "quality" && item.reason === "Quality Issues") ||
+			(selectedTab === "quality" &&
+				item.waste_reason === "Quality Issues") ||
 			(selectedTab === "preparation" &&
 				item.reason === "Preparation Waste") ||
-			(selectedTab === "plate" && item.reason === "Plate Waste");
+			(selectedTab === "plate" && item.waste_reason === "Plate Waste");
 
 		return matchesSearch && matchesTab;
 	});
@@ -84,163 +86,7 @@ export default function WasteLog({ wastageData }: WasteLogProps) {
 						Waste Log
 					</CardTitle>
 					<div className="flex items-center gap-2">
-						<Button
-							variant="outline"
-							size="sm"
-							className="border-[#2e6930] text-[#2e6930]"
-						>
-							<Filter className="h-4 w-4 mr-1" />
-							Filter
-						</Button>
-						<Dialog
-							open={addWasteDialogOpen}
-							onOpenChange={setAddWasteDialogOpen}
-						>
-							<DialogTrigger asChild>
-								<Button
-									size="sm"
-									className="bg-[#2e6930] hover:bg-[#1e4920]"
-								>
-									<Plus className="h-4 w-4 mr-1" />
-									Log Waste
-								</Button>
-							</DialogTrigger>
-							<DialogContent>
-								<DialogHeader>
-									<DialogTitle className="text-[#2e6930]">
-										Log Food Waste
-									</DialogTitle>
-									<DialogDescription>
-										Record details about food waste to help
-										identify patterns and reduce waste.
-									</DialogDescription>
-								</DialogHeader>
-								<div className="grid gap-4 py-4">
-									<div className="grid grid-cols-2 gap-4">
-										<div className="space-y-2">
-											<Label htmlFor="item">
-												Food Item
-											</Label>
-											<Input
-												id="item"
-												placeholder="e.g., Tomatoes"
-											/>
-										</div>
-									</div>
-									<div className="grid grid-cols-2 gap-4">
-										<div className="space-y-2">
-											<Label htmlFor="quantity">
-												Quantity
-											</Label>
-											<Input
-												id="quantity"
-												type="number"
-												step="0.1"
-												placeholder="0.0"
-											/>
-										</div>
-										<div className="space-y-2">
-											<Label htmlFor="unit">Unit</Label>
-											<Select>
-												<SelectTrigger>
-													<SelectValue placeholder="Select unit" />
-												</SelectTrigger>
-												<SelectContent>
-													<SelectItem value="lbs">
-														lbs
-													</SelectItem>
-													<SelectItem value="kg">
-														kg
-													</SelectItem>
-													<SelectItem value="oz">
-														oz
-													</SelectItem>
-													<SelectItem value="g">
-														g
-													</SelectItem>
-													<SelectItem value="pieces">
-														pieces
-													</SelectItem>
-													<SelectItem value="servings">
-														servings
-													</SelectItem>
-												</SelectContent>
-											</Select>
-										</div>
-									</div>
-									<div className="grid grid-cols-2 gap-4">
-										<div className="space-y-2">
-											<Label htmlFor="reason">
-												Reason for Waste
-											</Label>
-											<Select>
-												<SelectTrigger>
-													<SelectValue placeholder="Select reason" />
-												</SelectTrigger>
-												<SelectContent>
-													<SelectItem value="spoilage">
-														Spoilage
-													</SelectItem>
-													<SelectItem value="overproduction">
-														Overproduction
-													</SelectItem>
-													<SelectItem value="quality">
-														Quality Issues
-													</SelectItem>
-													<SelectItem value="preparation">
-														Preparation Waste
-													</SelectItem>
-													<SelectItem value="plate">
-														Plate Waste
-													</SelectItem>
-													<SelectItem value="expired">
-														Expired
-													</SelectItem>
-												</SelectContent>
-											</Select>
-										</div>
-										<div className="space-y-2">
-											<Label htmlFor="cost">
-												Estimated Cost ($)
-											</Label>
-											<Input
-												id="cost"
-												type="number"
-												step="0.01"
-												placeholder="0.00"
-											/>
-										</div>
-									</div>
-									<div className="space-y-2">
-										<Label htmlFor="notes">
-											Additional Notes
-										</Label>
-										<Textarea
-											id="notes"
-											placeholder="Any additional details about this waste..."
-										/>
-									</div>
-								</div>
-								<DialogFooter>
-									<Button
-										variant="outline"
-										onClick={() =>
-											setAddWasteDialogOpen(false)
-										}
-									>
-										Cancel
-									</Button>
-									<Button
-										className="bg-[#2e6930] hover:bg-[#1e4920]"
-										onClick={() =>
-											setAddWasteDialogOpen(false)
-										}
-									>
-										Log Waste
-									</Button>
-								</DialogFooter>
-							</DialogContent>
-						</Dialog>
+						<LogWaste menuItems={menuItems}></LogWaste>
 					</div>
 				</div>
 			</CardHeader>
