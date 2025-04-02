@@ -34,10 +34,15 @@ export default async function InventoryServer() {
 	const { data: inventoryData, error: inventoryError } = await supabase
 		.from("ingredients")
 		.select("*, inventory_transactions(quantity_change)");
+
 	if (inventoryError) {
 		console.error("Error fetching inventory data:", inventoryError);
 		return null;
 	}
+
+	const { data: menuItemsData, error: menuItemsError } = await supabase
+		.from("menu_items")
+		.select("*");
 
 	const {
 		data: inventoryTransactionsData,
@@ -155,7 +160,9 @@ export default async function InventoryServer() {
 								</CardTitle>
 							</CardHeader>
 							<CardContent className="space-y-4 w-full">
-								<CreateOrder></CreateOrder>
+								<CreateOrder
+									menuItems={menuItemsData!}
+								></CreateOrder>
 								<Button
 									variant="outline"
 									className="w-full border-[#2e6930] text-[#2e6930] justify-start hover:cursor-pointer"

@@ -1,5 +1,5 @@
 "use client";
-import { MinusCircle, Plus } from "lucide-react";
+import { MinusCircle, Plus, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
 import {
 	Dialog,
@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/select";
 import { Input } from "./ui/input";
 import { useState } from "react";
-import { ShoppingCart } from "lucide-react";
 import {
 	Table,
 	TableBody,
@@ -29,13 +28,46 @@ import {
 	TableHeader,
 	TableRow,
 } from "./ui/table";
+import sendOrder from "@/lib/actions/sendOrder";
 
-export default function CreateOrder() {
+interface CreateOrderProps {
+	menuItems: any[];
+}
+
+export default function CreateOrder({ menuItems }: CreateOrderProps) {
 	const [createOrderDialogOpen, setCreateOrderDialogOpen] = useState(false);
+	const [customerName, setCustomerName] = useState("");
 
 	const [orderItems, setOrderItems] = useState([
-		{ id: 1, name: "", quantity: "", unit: "lbs", price: "" },
+		{ id: 1, name: "", quantity: 0, unit: "lbs", price: 0 },
 	]);
+
+	const [selectedMenuItems, setSelectedMenuItems] = useState<{
+		[key: number]: any;
+	}>({});
+
+	const calculateSubtotal = () => {
+		return orderItems.reduce((total, item, index) => {
+			const unitPrice = selectedMenuItems[index]?.price || 0;
+			const quantity = item.quantity || 0;
+			return total + unitPrice * quantity;
+		}, 0);
+	};
+
+	const handleSubmit = async () => {
+		await sendOrder(orderItems, customerName);
+
+		setCreateOrderDialogOpen(false);
+		setOrderItems([
+			{
+				id: 1,
+				name: "",
+				quantity: 0,
+				unit: "lbs",
+				price: 0,
+			},
+		]);
+	};
 
 	return (
 		<Dialog
@@ -43,7 +75,7 @@ export default function CreateOrder() {
 			onOpenChange={setCreateOrderDialogOpen}
 		>
 			<DialogTrigger asChild>
-				<Button className="w-full bg-[#2e6930] hover:bg-[#1e4920] justify-start">
+				<Button className="w-full bg-[#2e6930] hover:bg-[#1e4920] justify-start hover:cursor-pointer">
 					<ShoppingCart className="h-4 w-4 mr-2" />
 					Create Order
 				</Button>
@@ -65,6 +97,9 @@ export default function CreateOrder() {
 								<Input
 									id="customer_name"
 									placeholder="Enter Customer Name"
+									onChange={(e) =>
+										setCustomerName(e.target.value)
+									}
 								/>
 							</div>
 						</div>
@@ -77,16 +112,16 @@ export default function CreateOrder() {
 							</h3>
 							<Button
 								size="sm"
-								className="bg-[#2e6930] hover:bg-[#1e4920]"
+								className="bg-[#2e6930] hover:bg-[#1e4920] hover:cursor-pointer"
 								onClick={() => {
 									setOrderItems([
 										...orderItems,
 										{
 											id: orderItems.length + 1,
 											name: "",
-											quantity: "",
+											quantity: 0,
 											unit: "lbs",
-											price: "",
+											price: 0,
 										},
 									]);
 								}}
@@ -100,14 +135,11 @@ export default function CreateOrder() {
 							<Table>
 								<TableHeader className="bg-[#f5f9f5]">
 									<TableRow>
-										<TableHead className="text-[#2e6930] w-[40%]">
+										<TableHead className="text-[#2e6930] w-[20%]">
 											Item
 										</TableHead>
-										<TableHead className="text-[#2e6930] w-[15%]">
+										<TableHead className="text-[#2e6930] w-[20%]">
 											Quantity
-										</TableHead>
-										<TableHead className="text-[#2e6930] w-[15%]">
-											Unit
 										</TableHead>
 										<TableHead className="text-[#2e6930] w-[15%]">
 											Unit Price
@@ -121,57 +153,109 @@ export default function CreateOrder() {
 									{orderItems.map((item, index) => (
 										<TableRow key={item.id}>
 											<TableCell>
-												<Input
-													id="name"
-													placeholder="order name"
-												/>
+												<Select
+													onValueChange={(value) => {
+														const selectedItem =
+															menuItems.find(
+																(menu) =>
+																	menu.id ===
+																	value
+															);
+
+														if (selectedItem) {
+															setSelectedMenuItems(
+																(prev) => ({
+																	...prev,
+																	[index]:
+																		selectedItem,
+																})
+															);
+
+															setOrderItems(
+																(
+																	prevOrderItems
+																) =>
+																	prevOrderItems.map(
+																		(
+																			orderItem,
+																			i
+																		) =>
+																			i ===
+																			index
+																				? {
+																						...orderItem,
+																						id: selectedItem.id,
+																						name: selectedItem.name,
+																						price: selectedItem.price,
+																				  }
+																				: orderItem
+																	)
+															);
+														}
+													}}
+												>
+													<SelectTrigger>
+														<SelectValue placeholder="Select item" />
+													</SelectTrigger>
+													<SelectContent>
+														{menuItems.map(
+															(menu) => (
+																<SelectItem
+																	value={
+																		menu.id
+																	}
+																	key={
+																		menu.id
+																	}
+																>
+																	{menu.name}
+																</SelectItem>
+															)
+														)}
+													</SelectContent>
+												</Select>
 											</TableCell>
 											<TableCell>
 												<Input
 													type="number"
-													min="0"
-													step="0.1"
-													placeholder="0.0"
+													placeholder="0"
+													value={item.quantity}
+													onChange={(e) => {
+														const updatedQuantity =
+															parseFloat(
+																e.target.value
+															) || 0;
+														setOrderItems(
+															(prevOrderItems) =>
+																prevOrderItems.map(
+																	(
+																		orderItem,
+																		i
+																	) =>
+																		i ===
+																		index
+																			? {
+																					...orderItem,
+																					quantity:
+																						updatedQuantity,
+																			  }
+																			: orderItem
+																)
+														);
+													}}
 												/>
 											</TableCell>
-											<TableCell>
-												<Select defaultValue="lbs">
-													<SelectTrigger>
-														<SelectValue />
-													</SelectTrigger>
-													<SelectContent>
-														<SelectItem value="lbs">
-															lbs
-														</SelectItem>
-														<SelectItem value="kg">
-															kg
-														</SelectItem>
-														<SelectItem value="oz">
-															oz
-														</SelectItem>
-														<SelectItem value="gallons">
-															gallons
-														</SelectItem>
-														<SelectItem value="quarts">
-															quarts
-														</SelectItem>
-														<SelectItem value="pieces">
-															pieces
-														</SelectItem>
-													</SelectContent>
-												</Select>
-											</TableCell>
+
 											<TableCell>
 												<div className="flex items-center">
 													<span className="mr-1">
 														$
 													</span>
-													<Input
-														type="number"
-														min="0"
-														step="0.01"
-														placeholder="0.00"
-													/>
+													<p>
+														{selectedMenuItems[
+															index
+														]?.price || "N/A"}
+													</p>
 												</div>
 											</TableCell>
 											<TableCell>
@@ -211,7 +295,7 @@ export default function CreateOrder() {
 									Estimated Total
 								</div>
 								<div className="text-xl font-semibold text-[#2e6930]">
-									$0.00
+									${calculateSubtotal().toFixed(2)}
 								</div>
 							</div>
 						</div>
@@ -227,17 +311,7 @@ export default function CreateOrder() {
 					<Button
 						className="bg-[#2e6930] hover:bg-[#1e4920]"
 						onClick={() => {
-							// Submit the order
-							setCreateOrderDialogOpen(false);
-							setOrderItems([
-								{
-									id: 1,
-									name: "",
-									quantity: "",
-									unit: "lbs",
-									price: "",
-								},
-							]);
+							handleSubmit();
 						}}
 					>
 						Place Order
