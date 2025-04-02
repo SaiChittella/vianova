@@ -6,7 +6,7 @@ import {
     Filter,
     Pencil,
     Plus,
-    Search, 
+    Search,
     Trash2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -14,6 +14,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import DeleteDialog from "@/components/DeleteDialog"
+import IngredientDialog from "./IngredientDialog"
+
+import { addIngredient as addIngredientAction, editIngredient as editIngredientAction, deleteIngredient as deleteIngredientAction} from "@/lib/actions/ingredients"
 
 interface IngredientsTableProps {
     ingredients: any[]
@@ -58,11 +61,7 @@ export default function IngredientsTable({ ingredients }: IngredientsTableProps)
                     <div className="flex justify-between items-center">
                         <CardTitle className="text-[#2e6930] text-xl">Ingredients</CardTitle>
                         <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm" className="border-[#2e6930] text-[#2e6930]">
-                                <Filter className="h-4 w-4 mr-1" />
-                                Filter
-                            </Button>
-                            <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={setAddIngredient.bind(null, true)}>
+                            <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={() => setAddIngredient(true)}>
                                 <Plus className="h-4 w-4 mr-1" />
                                 Add Ingredient
                             </Button>
@@ -145,11 +144,11 @@ export default function IngredientsTable({ ingredients }: IngredientsTableProps)
                 </CardContent>
             </Card>
 
-            {/* TODO: Edit Ingredient Dialog */}
-            {selectedIngredient && null}
+            <IngredientDialog open={addIngredient} setOpen={setAddIngredient} title="Add Ingredient" description="Add a new item to your inventory. Fill in all the details below." buttonText="Add Ingredient" serverAction={addIngredientAction} />
+            
+            {selectedIngredient && <IngredientDialog open={editIngredient} setOpen={setEditIngredient} title={"Edit Ingredient"} description={"Edit an ingredient by filling out the details below. "} buttonText={"Edit Ingredient"} serverAction={editIngredientAction.bind(null, selectedIngredient.id)}/>}
 
-            {selectedIngredient && (<DeleteDialog open={deleteIngredient} setOpen={setDeleteIngredient} title="Confirm Deletion" message={`Are you sure you want to delete ${selectedIngredient.name}? This action cannot be undone.`}></DeleteDialog>)}
-
+            {selectedIngredient && (<DeleteDialog open={deleteIngredient} setOpen={setDeleteIngredient} title="Confirm Deletion" message={`Are you sure you want to delete ${selectedIngredient.name}? This action cannot be undone.`} buttonText={"Delete Ingredient"} serverAction={deleteIngredientAction.bind(null, selectedIngredient.id)}></DeleteDialog>)}
         </>
     )
 }

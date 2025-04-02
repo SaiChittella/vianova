@@ -20,16 +20,24 @@ import {
 } from "@/components/ui/select";
 import { Input } from "./ui/input";
 import { useState } from "react";
-import { updateInventory } from "@/lib/actions/updateInventory";
+import { set } from "date-fns";
 
 // TODO: Make this a generic component
 
-export default function AddItems() {
-	const [addItemDialogOpen, setAddItemDialogOpen] = useState(false);
+interface AddItemsProps {
+	open: boolean,
+	setOpen: (open: boolean) => void,
+	title: string,
+	description: string,
+	buttonText: string,
+	serverAction: (ingredient: any, quantity: number) => Promise<void>,
+}
+
+export default function IngredientDialog({ open, setOpen, title, description, buttonText, serverAction }: AddItemsProps) {
+	const [quantity, setQuantity] = useState("");
 	const [newItem, setNewItem] = useState({
 		name: "",
 		description: "",
-		quantity: "",
 		unit_of_measure: "lbs",
 		cost_per_unit: "",
 		low_inventory_threshold: "",
@@ -37,26 +45,22 @@ export default function AddItems() {
 	});
 
 	const handleSubmit = async () => {
-		await updateInventory(newItem);
-		setAddItemDialogOpen(false);
+		const cleanedObj = Object.fromEntries(
+			Object.entries(newItem).filter(([_, value]) => value !== "")
+		);
+		await serverAction(cleanedObj, parseInt(quantity))
+		setOpen(false);
 	};
 
 	return (
-		<Dialog open={addItemDialogOpen} onOpenChange={setAddItemDialogOpen}>
-			<DialogTrigger asChild>
-				<Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]">
-					<Plus className="h-4 w-4 mr-1" />
-					Add Item
-				</Button>
-			</DialogTrigger>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogContent className="max-w-md">
 				<DialogHeader>
 					<DialogTitle className="text-[#2e6930]">
-						Add Inventory Item
+						{title}
 					</DialogTitle>
 					<DialogDescription>
-						Add a new item to your inventory. Fill in all the
-						details below.
+						{description}
 					</DialogDescription>
 				</DialogHeader>
 				<div className="grid gap-4 py-4">
@@ -90,13 +94,11 @@ export default function AddItems() {
 							<Label>Quantity</Label>
 							<Input
 								id="quantity"
+								type="number"
 								placeholder="e.g., 20"
-								value={newItem.quantity}
+								value={quantity}
 								onChange={(e) =>
-									setNewItem({
-										...newItem,
-										quantity: e.target.value,
-									})
+									setQuantity(e.target.value)
 								}
 							/>
 						</div>
@@ -113,7 +115,7 @@ export default function AddItems() {
 									})
 								}
 							>
-								<SelectTrigger>
+								<SelectTrigger className="w-full">
 									<SelectValue placeholder="Select unit" />
 								</SelectTrigger>
 								<SelectContent>
@@ -185,11 +187,10 @@ export default function AddItems() {
 					<Button
 						variant="outline"
 						onClick={() => {
-							setAddItemDialogOpen(false);
+							setOpen(false);
 							setNewItem({
 								name: "",
 								description: "",
-								quantity: "",
 								unit_of_measure: "lbs",
 								cost_per_unit: "",
 								low_inventory_threshold: "",
@@ -205,7 +206,7 @@ export default function AddItems() {
 							handleSubmit();
 						}}
 					>
-						Add Item
+						{buttonText}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

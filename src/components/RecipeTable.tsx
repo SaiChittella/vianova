@@ -11,7 +11,8 @@ import { DialogHeader, DialogFooter } from './ui/dialog'
 import { Input } from './ui/input'
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table'
 import { Textarea } from './ui/textarea'
-import AddItems from './AddItems'
+import IngredientDialog from './IngredientDialog'
+import DeleteDialog from './DeleteDialog'
 
 interface RecipeProps {
   menuItem: string
@@ -39,6 +40,7 @@ export default function RecipeTable({ recipes, menuItem }: RecipeProps) {
 
   // Handle delete recipe
   const handleDeleteRecipe = (recipe: any) => {
+    console.log(recipe)
     setSelectedIngredient(recipe)
     setDeleteConfirmDialogOpen(true)
   }
@@ -49,7 +51,10 @@ export default function RecipeTable({ recipes, menuItem }: RecipeProps) {
           <div className="flex justify-between items-center">
             <CardTitle className="text-[#2e6930] text-xl">{`${menuItem} Recipe`}</CardTitle>
             <div className="flex items-center gap-2">
-              <AddItems></AddItems>
+              <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={() => setAddRecipeDialogOpen(true)}>
+                <Plus className="h-4 w-4 mr-1" />
+                Add Ingredient
+              </Button>
             </div>
           </div>
         </CardHeader>
@@ -121,6 +126,9 @@ export default function RecipeTable({ recipes, menuItem }: RecipeProps) {
         </CardContent>
       </Card>
 
+
+      {/* TODO: Create recipe dialog */}
+      <DeleteDialog open={deleteConfirmDialogOpen} setOpen={setDeleteConfirmDialogOpen} title={'Confirm Deletion'} message={`Are you sure you want to delete ${selectedIngredient?.ingredients.name} from the recipe?`} buttonText={'Delete Ingredient'}></DeleteDialog>
 
     </>
   )

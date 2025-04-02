@@ -118,9 +118,9 @@ export default function MenuItemsTable({ menuItems }: MenuItemsTableProps) {
 
             {selectedMenuItem && (<MenuItemDialog open={editMenuItem} setOpen={setEditMenuItem} title={"Edit Menu Item"} description={"Change the details for your menu item."} buttonText={"Edit Menu Item"} />)}
 
-            {selectedMenuItem && <DeleteDialog open={deleteMenuItem} setOpen={setDeleteMenuItem} title={`Confirm Deletion`} message={`Are you sure you want to delete ${selectedMenuItem.name}? This action cannot be undone.`}></DeleteDialog>}
+            {selectedMenuItem && <DeleteDialog open={deleteMenuItem} setOpen={setDeleteMenuItem} title={`Confirm Deletion`} message={`Are you sure you want to delete ${selectedMenuItem.name}? This action cannot be undone.`} buttonText={"Add Menu Item"}></DeleteDialog>}
 
-            <MenuItemDialog open={addMenuItem} setOpen={setAddMenuItem} title={"Add New Menu Item"} description={"Enter the details for the new menu item."} buttonText={"Add Menu Item"} />
+            <MenuItemDialog open={addMenuItem} setOpen={setAddMenuItem} title={"Add New Menu Item"} description={"Enter the details for the new menu item."} buttonText={"Delete Menu Item"} />
         </div>
     )
 }

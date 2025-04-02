@@ -1,5 +1,5 @@
 "use client"
-import { Search, Table as TableIcon, Badge, Pencil, Trash2 } from 'lucide-react'
+import { Search, Table as TableIcon, Badge, Pencil, Trash2, Plus } from 'lucide-react'
 import React, { useState } from 'react'
 import { Button } from './ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
@@ -12,7 +12,7 @@ interface RolesTableProps {
     users: any[]
 }
 
-export default function RolesTable({users}: RolesTableProps) {
+export default function RolesTable({ users }: RolesTableProps) {
 
     const [searchQuery, setSearchQuery] = useState("")
     const [addRoleDialogOpen, setAddRoleDialogOpen] = useState(false)
@@ -43,16 +43,19 @@ export default function RolesTable({users}: RolesTableProps) {
         setDeleteConfirmDialogOpen(true)
     }
 
-  return (
-    <>
-    <div>
-        {/* Roles management */}
-        <Card className="border border-[#e8f2e8] rounded-2xl">
+    return (
+        <>
+            <div>
+                {/* Roles management */}
+                <Card className="border border-[#e8f2e8] rounded-2xl">
                     <CardHeader className="pb-2">
                         <div className="flex justify-between items-center">
                             <CardTitle className="text-[#2e6930] text-xl">Roles</CardTitle>
                             <div className="flex items-center gap-2">
-
+                                <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={() => setAddRoleDialogOpen(true)}>
+                                    <Plus className="h-4 w-4 mr-1" />
+                                    Invite User
+                                </Button>
                             </div>
                         </div>
                     </CardHeader>
@@ -121,15 +124,15 @@ export default function RolesTable({users}: RolesTableProps) {
                         </div>
                     </CardContent>
                 </Card>
-    </div>
+            </div>
 
-    <DeleteDialog open={deleteConfirmDialogOpen} setOpen={setDeleteConfirmDialogOpen} title={'Confirm Deletion'} message={`Are you sure you want to delete ${selectedRole?.email}? This action cannot be undone.`}></DeleteDialog>
+            <DeleteDialog open={deleteConfirmDialogOpen} setOpen={setDeleteConfirmDialogOpen} title={'Confirm Deletion'} message={`Are you sure you want to delete ${selectedRole?.email}? This action cannot be undone.`} buttonText={'Remove Member'}></DeleteDialog>
 
-    <RolesDialog open={addRoleDialogOpen} setOpen={setAddRoleDialogOpen} title={'Add a member'} description={'Invite a user to your restaurant. They will be sent a confirmation email.'} buttonText={'Invite user'}></RolesDialog>
-    
-    <RolesDialog open={editRoleDialogOpen} setOpen={setEditRoleDialogOpen} title={'Edit Member Role'} description={'Change the role of a member.'} buttonText={'Edit role'} constantEmail></RolesDialog>
+            <RolesDialog open={addRoleDialogOpen} setOpen={setAddRoleDialogOpen} title={'Add a member'} description={'Invite a user to your restaurant. They will be sent a confirmation email.'} buttonText={'Invite user'}></RolesDialog>
+
+            <RolesDialog open={editRoleDialogOpen} setOpen={setEditRoleDialogOpen} title={'Edit Member Role'} description={'Change the role of a member.'} buttonText={'Edit role'} constantEmail></RolesDialog>
 
 
-    </>
-  )
+        </>
+    )
 }

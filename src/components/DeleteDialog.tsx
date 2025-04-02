@@ -8,14 +8,15 @@ interface DeleteButtonProps {
     setOpen: (open: boolean) => void,
     title: string,
     message: string,
-    deleteServerAction?: () => void
+    buttonText: string
+    serverAction?: () => void
 }
 
-export default function DeleteDialog({open, setOpen, title, message, deleteServerAction}: DeleteButtonProps) {
+export default function DeleteDialog({open, setOpen, title, message, serverAction, buttonText}: DeleteButtonProps) {
 
   function clientDeleteAction() {
     setOpen(false)
-    deleteServerAction && deleteServerAction()
+    serverAction && serverAction()
   }
 
   return (
@@ -32,7 +33,7 @@ export default function DeleteDialog({open, setOpen, title, message, deleteServe
                 Cancel
               </Button>
               <Button variant="destructive" onClick={clientDeleteAction}>
-                Delete Ingredient
+                {buttonText}
               </Button>
             </DialogFooter>
           </DialogContent>
