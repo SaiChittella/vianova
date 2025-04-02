@@ -148,7 +148,7 @@ export default function IngredientsTable({ ingredients }: IngredientsTableProps)
             {/* TODO: Edit Ingredient Dialog */}
             {selectedIngredient && null}
 
-            {selectedIngredient && (<DeleteDialog open={deleteIngredient} setOpen={setDeleteIngredient} title="Confirm Deletion" message={`Are you sure you want to delete ${selectedIngredient.name}? This action cannot be undone`}></DeleteDialog>)}
+            {selectedIngredient && (<DeleteDialog open={deleteIngredient} setOpen={setDeleteIngredient} title="Confirm Deletion" message={`Are you sure you want to delete ${selectedIngredient.name}? This action cannot be undone.`}></DeleteDialog>)}
 
         </>
     )
