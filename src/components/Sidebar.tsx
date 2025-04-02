@@ -5,6 +5,7 @@ import {
 	Settings,
 	CircleHelp,
 	CircleUserRound,
+	Biohazard,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -57,6 +58,16 @@ export default function Sidebar() {
 					<CircleHelp
 						className={`h-8 w-8 text-[#388E3C] hover:cursor-pointer ${
 							pathname === "/faq"
+								? "bg-[#1B5E20] rounded-lg p-1 text-white"
+								: "bg-none"
+						}`}
+					/>
+				</Link>
+
+				<Link href="/wastage">
+					<Biohazard
+						className={`h-8 w-8 text-[#388E3C] hover:cursor-pointer ${
+							pathname === "/wastage"
 								? "bg-[#1B5E20] rounded-lg p-1 text-white"
 								: "bg-none"
 						}`}

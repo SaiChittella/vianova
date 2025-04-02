@@ -35,6 +35,14 @@ export default function AddItems() {
 	});
 
 	const handleSubmit = async () => {
+		if (
+			newItem.low_inventory_threshold > newItem.medium_inventory_threshold
+		) {
+			alert(
+				"Cannot have low threshold greater than medium threshold, please try again."
+			);
+			return;
+		}
 		await updateInventory(newItem);
 		setAddItemDialogOpen(false);
 	};
