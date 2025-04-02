@@ -153,9 +153,6 @@ export default function WasteLog({ wastageData, menuItems }: WasteLogProps) {
 										<ArrowUpDown className="ml-1 h-3 w-3" />
 									</div>
 								</TableHead>
-								<TableHead className="text-[#2e6930]">
-									Actions
-								</TableHead>
 							</TableRow>
 						</TableHeader>
 						<TableBody>
@@ -197,30 +194,6 @@ export default function WasteLog({ wastageData, menuItems }: WasteLogProps) {
 											{new Date(
 												item.date
 											).toLocaleDateString()}
-										</TableCell>
-										<TableCell>
-											<DropdownMenu>
-												<DropdownMenuTrigger asChild>
-													<Button
-														variant="ghost"
-														size="sm"
-													>
-														<span>Actions</span>
-														<ChevronDown className="ml-1 h-4 w-4" />
-													</Button>
-												</DropdownMenuTrigger>
-												<DropdownMenuContent align="end">
-													<DropdownMenuItem>
-														Edit Entry
-													</DropdownMenuItem>
-													<DropdownMenuItem>
-														View Details
-													</DropdownMenuItem>
-													<DropdownMenuItem className="text-red-600">
-														Delete Entry
-													</DropdownMenuItem>
-												</DropdownMenuContent>
-											</DropdownMenu>
 										</TableCell>
 									</TableRow>
 								))

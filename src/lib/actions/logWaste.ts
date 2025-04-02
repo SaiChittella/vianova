@@ -28,6 +28,7 @@ export default async function logWaste(wastedItem: logWasteProps) {
 		console.error("Error logging waste: ", logWasteError);
 		return;
 	}
+    
 	//  TODO: Need to update the transactions in inventory_transaction
 
 	revalidatePath("/wastage");

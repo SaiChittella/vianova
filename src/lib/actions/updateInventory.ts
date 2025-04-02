@@ -1,5 +1,6 @@
 "use server";
 import { createClient } from "@/lib/utils/supabase/server";
+import { revalidatePath } from "next/cache";
 
 interface updateInventoryProps {
 	name: string;
@@ -47,4 +48,6 @@ export async function updateInventory(newItem: updateInventoryProps) {
 		);
 		return;
 	}
+
+	revalidatePath('/inventory')
 }

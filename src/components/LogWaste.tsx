@@ -69,7 +69,10 @@ export default function LogWaste({ menuItems }: LogWasteProps) {
 	return (
 		<Dialog open={addWasteDialogOpen} onOpenChange={setAddWasteDialogOpen}>
 			<DialogTrigger asChild>
-				<Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]">
+				<Button
+					size="sm"
+					className="bg-[#2e6930] hover:bg-[#1e4920] hover:cursor-pointer"
+				>
 					<Plus className="h-4 w-4 mr-1" />
 					Log Waste
 				</Button>
@@ -92,7 +95,7 @@ export default function LogWaste({ menuItems }: LogWasteProps) {
 								onValueChange={(value) =>
 									setWastedItems((prev) => ({
 										...prev,
-										menu_items_id: value, 
+										menu_items_id: value,
 									}))
 								}
 							>
