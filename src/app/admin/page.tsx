@@ -6,7 +6,6 @@ import { createClient } from "@/lib/utils/supabase/server"
 export default async function AdminDashboard() {
 
     // TODO: Redirect if not an admin
-
     const supabase = await createClient()
 
     const { count: ingredientCount, error } = await supabase
