@@ -1,4 +1,5 @@
 import RestaurantForm from '@/components/RestaurantForm'
+import { deleteRestaurant, editRestaurant } from '@/lib/actions/restaurant'
 import { createClient } from '@/lib/utils/supabase/server'
 import { ChevronDown, Store } from 'lucide-react'
 import Link from 'next/link'
@@ -35,7 +36,7 @@ export default async function page() {
                     <p className="text-gray-500 mt-1">Manage your restaurant's information and configuration.</p>
                 </div>
 
-                <RestaurantForm restaurant={restaurant}></RestaurantForm>
+                <RestaurantForm restaurant={restaurant} editRestaurant={editRestaurant} deleteRestaurant={deleteRestaurant}></RestaurantForm>
             </div>
 
         </div>

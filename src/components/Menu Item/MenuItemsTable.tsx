@@ -1,12 +1,14 @@
 "use client"
 import { useState } from "react"
 import { Plus, Search, Table as TableIcon, ArrowUpDown, Pencil, Trash2 } from "lucide-react"
-import { Button } from "./ui/button"
-import { Card, CardHeader, CardTitle, CardContent } from "./ui/card"
-import { Input } from "./ui/input"
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "./ui/table"
-import DeleteDialog from "./DeleteDialog"
+import { Button } from "../ui/button"
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card"
+import { Input } from "../ui/input"
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "../ui/table"
+import DeleteDialog from "../DeleteDialog"
 import MenuItemDialog from "./MenuItemDialog"
+
+import { addMenuItem, editMenuItem, deleteMenuItem } from "@/lib/actions/menuItems"
 
 interface MenuItemsTableProps {
     menuItems: any[]
@@ -16,9 +18,9 @@ export default function MenuItemsTable({ menuItems }: MenuItemsTableProps) {
 
     const [searchQuery, setSearchQuery] = useState("")
 
-    const [addMenuItem, setAddMenuItem] = useState(false)
-    const [editMenuItem, setEditMenuItem] = useState(false)
-    const [deleteMenuItem, setDeleteMenuItem] = useState(false)
+    const [addMenuItemDialog, setAddMenuItemDialog] = useState(false)
+    const [editMenuItemDialog, setEditMenuItemDialog] = useState(false)
+    const [deleteMenuItemDialog, setDeleteMenuItemDialog] = useState(false)
     
     const [selectedMenuItem, setSelectedMenuItem] = useState<any>("")
 
@@ -34,13 +36,13 @@ export default function MenuItemsTable({ menuItems }: MenuItemsTableProps) {
     // Handle edit menu item
     const handleEditMenuItem = (item: any) => {
         setSelectedMenuItem(item)
-        setEditMenuItem(true)
+        setEditMenuItemDialog(true)
     }
 
     // Handle delete menu item
     const handleDeleteMenuItem = (item: any) => {
         setSelectedMenuItem(item)
-        setDeleteMenuItem(true)
+        setDeleteMenuItemDialog(true)
     }
 
     return (
@@ -49,7 +51,7 @@ export default function MenuItemsTable({ menuItems }: MenuItemsTableProps) {
                 <CardHeader className="pb-2">
                     <div className="flex justify-between items-center">
                         <CardTitle className="text-[#2e6930] text-xl">Menu Items</CardTitle>
-                        <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={setAddMenuItem.bind(null, true)}>
+                        <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={setAddMenuItemDialog.bind(null, true)}>
                             <Plus className="h-4 w-4 mr-1" />
                             Add Menu Item
                         </Button>
@@ -116,11 +118,11 @@ export default function MenuItemsTable({ menuItems }: MenuItemsTableProps) {
                 </CardContent>
             </Card>
 
-            {selectedMenuItem && (<MenuItemDialog open={editMenuItem} setOpen={setEditMenuItem} title={"Edit Menu Item"} description={"Change the details for your menu item."} buttonText={"Edit Menu Item"} />)}
+            {selectedMenuItem && (<MenuItemDialog open={editMenuItemDialog} setOpen={setEditMenuItemDialog} title={"Edit Menu Item"} description={"Change the details for your menu item."} buttonText={"Edit Menu Item"} serverAction={editMenuItem.bind(null, selectedMenuItem.id)} />)}
 
-            {selectedMenuItem && <DeleteDialog open={deleteMenuItem} setOpen={setDeleteMenuItem} title={`Confirm Deletion`} message={`Are you sure you want to delete ${selectedMenuItem.name}? This action cannot be undone.`} buttonText={"Add Menu Item"}></DeleteDialog>}
+            {selectedMenuItem && <DeleteDialog open={deleteMenuItemDialog} setOpen={setDeleteMenuItemDialog} title={`Confirm Deletion`} message={`Are you sure you want to delete ${selectedMenuItem.name}? This action cannot be undone.`} buttonText={"Add Menu Item"} serverAction={deleteMenuItem.bind(null, selectedMenuItem.id)}></DeleteDialog>}
 
-            <MenuItemDialog open={addMenuItem} setOpen={setAddMenuItem} title={"Add New Menu Item"} description={"Enter the details for the new menu item."} buttonText={"Delete Menu Item"} />
+            <MenuItemDialog open={addMenuItemDialog} setOpen={setAddMenuItemDialog} title={"Add New Menu Item"} description={"Enter the details for the new menu item."} buttonText={"Add Menu Item"} serverAction={addMenuItem} />
         </div>
     )
 }

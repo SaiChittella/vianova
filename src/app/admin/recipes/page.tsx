@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { BookOpen, ChevronDown } from "lucide-react"
-import RecipeTable from "@/components/RecipeTable"
+import RecipeTable from "@/components/Recipe/RecipeTable"
 import { createClient } from "@/lib/utils/supabase/server"
 
 export default async function RecipesManagement() {
@@ -43,10 +43,10 @@ export default async function RecipesManagement() {
                         
 
                         return (
-                            <div key={item.id}><RecipeTable menuItem={item.name} recipes={data!}></RecipeTable></div>
+                            <div key={item.id}><RecipeTable menuItem={item} recipes={data!} ingredients={ingredients!}></RecipeTable></div>
 
                         )
-                    })) : <p></p>}
+                    })) : <p>No menu items found!</p>}
                 </div>
 
             </div>

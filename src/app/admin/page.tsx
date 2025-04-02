@@ -2,6 +2,7 @@ import Link from "next/link"
 import { ChevronRight, ShieldCheck, Users, BookOpen, Coffee, Store, Egg } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/utils/supabase/server"
+import RecentActivity from "@/components/RecentActivity"
 
 export default async function AdminDashboard() {
 
@@ -19,6 +20,19 @@ export default async function AdminDashboard() {
     const { count: userCount } = await supabase
         .from('roles')
         .select('*', { count: 'exact', head: true });
+
+    const {
+        data: inventoryTransactionsData,
+        error: inventoryTransactionError,
+    } = await supabase
+        .from("inventory_transactions")
+        .select("*, ingredients(name, unit_of_measure)");
+
+    inventoryTransactionsData?.sort(
+        (a: any, b: any) =>
+            new Date(b.transaction_date).getTime() -
+            new Date(a.transaction_date).getTime()
+    );
 
     return (
         <div className="flex min-h-screen bg-white">
@@ -122,8 +136,24 @@ export default async function AdminDashboard() {
                         </Card>
                     </Link>
                 </div>
-
-                {/* TODO: Inventory Transaction History */}
+                <Card className="border border-[#e8f2e8] rounded-2xl">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-[#2e6930] text-lg">
+                            Recent Activity
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="space-y-4 text-sm">
+                            <RecentActivity
+                                initialData={inventoryTransactionsData?.slice(
+                                    0,
+                                    4
+                                )}
+                                fullData={inventoryTransactionsData}
+                            />
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
         </div>
     )

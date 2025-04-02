@@ -20,7 +20,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import countStock from "@/lib/utils/countInventory";
-import IngredientDialog from "@/components/IngredientDialog";
+import IngredientDialog from "@/components/Ingredients/IngredientDialog";
 import { addIngredient } from "@/lib/actions/ingredients";
 
 interface InventoryComponentProps {

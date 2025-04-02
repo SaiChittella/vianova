@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { ArrowUpDown, ChevronDown, Coffee, Pencil, Plus, Search, Trash2 } from "lucide-react"
-import MenuItemsTable from "@/components/MenuItemsTable"
+import MenuItemsTable from "@/components/Menu Item/MenuItemsTable"
 import { createClient } from "@/lib/utils/supabase/server"
 
 export default async function MenuItems() {

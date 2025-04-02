@@ -1,25 +1,26 @@
 "use client"
-import { Search, Table as TableIcon, Badge, Pencil, Trash2, Plus } from 'lucide-react'
+import { Search, Pencil, Trash2, Plus } from 'lucide-react'
 import React, { useState } from 'react'
-import { Button } from './ui/button'
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
-import { Input } from './ui/input'
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table'
-import DeleteDialog from './DeleteDialog'
+import { Button } from '../ui/button'
+import { Card, CardHeader, CardTitle, CardContent } from '../ui/card'
+import { Input } from '../ui/input'
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../ui/table'
+import DeleteDialog from '../DeleteDialog'
 import RolesDialog from './RolesDialog'
 
 interface RolesTableProps {
     users: any[]
 }
 
+import { addRole, editRole, deleteRole} from "@/lib/actions/roles"
+
 export default function RolesTable({ users }: RolesTableProps) {
 
     const [searchQuery, setSearchQuery] = useState("")
-    const [addRoleDialogOpen, setAddRoleDialogOpen] = useState(false)
-    const [editRoleDialogOpen, setEditRoleDialogOpen] = useState(false)
-    const [deleteConfirmDialogOpen, setDeleteConfirmDialogOpen] = useState(false)
+    const [addRoleDialog, setAddRoleDialog] = useState(false)
+    const [editRoleDialog, setEditRoleDialog] = useState(false)
+    const [deleteConfirmDialog, setDeleteConfirmDialog] = useState(false)
     const [selectedRole, setSelectedRole] = useState<any>(null)
-    const [activeTab, setActiveTab] = useState("all")
 
     // Filter roles based on search query and active tab
     const filteredRoles = users.filter((role) => {
@@ -32,15 +33,21 @@ export default function RolesTable({ users }: RolesTableProps) {
     })
 
     // Handle edit role
+    const handleAddRole = (role: any) => {
+        setSelectedRole(role)
+        setAddRoleDialog(true)
+    }
+
+    // Handle edit role
     const handleEditRole = (role: any) => {
         setSelectedRole(role)
-        setEditRoleDialogOpen(true)
+        setEditRoleDialog(true)
     }
 
     // Handle delete role
     const handleDeleteRole = (role: any) => {
         setSelectedRole(role)
-        setDeleteConfirmDialogOpen(true)
+        setDeleteConfirmDialog(true)
     }
 
     return (
@@ -52,7 +59,7 @@ export default function RolesTable({ users }: RolesTableProps) {
                         <div className="flex justify-between items-center">
                             <CardTitle className="text-[#2e6930] text-xl">Roles</CardTitle>
                             <div className="flex items-center gap-2">
-                                <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={() => setAddRoleDialogOpen(true)}>
+                                <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={handleAddRole} >
                                     <Plus className="h-4 w-4 mr-1" />
                                     Invite User
                                 </Button>
@@ -126,11 +133,11 @@ export default function RolesTable({ users }: RolesTableProps) {
                 </Card>
             </div>
 
-            <DeleteDialog open={deleteConfirmDialogOpen} setOpen={setDeleteConfirmDialogOpen} title={'Confirm Deletion'} message={`Are you sure you want to delete ${selectedRole?.email}? This action cannot be undone.`} buttonText={'Remove Member'}></DeleteDialog>
+            <DeleteDialog open={deleteConfirmDialog} setOpen={setDeleteConfirmDialog} title={'Confirm Deletion'} message={`Are you sure you want to delete ${selectedRole?.email}? This action cannot be undone.`} buttonText={'Remove Member'} serverAction={deleteRole.bind(null, selectedRole?.id)} />
 
-            <RolesDialog open={addRoleDialogOpen} setOpen={setAddRoleDialogOpen} title={'Add a member'} description={'Invite a user to your restaurant. They will be sent a confirmation email.'} buttonText={'Invite user'}></RolesDialog>
+            <RolesDialog open={addRoleDialog} setOpen={setAddRoleDialog} title={'Add a member'} description={'Invite a user to your restaurant. They will be sent a confirmation email.'} buttonText={'Invite user'} serverAction={addRole} />
 
-            <RolesDialog open={editRoleDialogOpen} setOpen={setEditRoleDialogOpen} title={'Edit Member Role'} description={'Change the role of a member.'} buttonText={'Edit role'} constantEmail></RolesDialog>
+            <RolesDialog open={editRoleDialog} setOpen={setEditRoleDialog} title={'Edit Member Role'} description={'Change the role of a member.'} buttonText={'Edit role'} constantEmail serverAction={editRole.bind(null, selectedRole?.id)}/>
 
 
         </>

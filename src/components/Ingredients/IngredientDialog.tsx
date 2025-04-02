@@ -1,6 +1,6 @@
 "use client";
 import { Plus } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -9,7 +9,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "./ui/dialog";
+} from "../ui/dialog";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import {
 	Select,
@@ -18,11 +18,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import { useState } from "react";
-import { set } from "date-fns";
-
-// TODO: Make this a generic component
 
 interface AddItemsProps {
 	open: boolean,

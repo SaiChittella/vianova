@@ -47,7 +47,7 @@ export async function signup(formData: FormData) {
 		.select()
 		.single();
 
-	// TODO: Add email
+	// TODO: Add email to roles
 	const { error: userError } = await supabase.from("roles").insert({
 		user_id: userData.user?.id,
 		role: "admin",

@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { ChevronDown, Egg, } from "lucide-react"
-import IngredientsTable from "@/components/IngredientsTable"
+import IngredientsTable from "@/components/Ingredients/IngredientsTable"
 import { createClient } from "@/lib/utils/supabase/server"
 
 export default async function IngredientsManagement() {

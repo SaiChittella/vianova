@@ -1,10 +1,7 @@
 import Link from "next/link"
-import {
-    ChevronDown,
-    Users
-} from "lucide-react"
+import { ChevronDown, Users } from "lucide-react"
 import { createClient } from "@/lib/utils/supabase/server"
-import RolesTable from "@/components/RolesTable"
+import RolesTable from "@/components/Roles/RolesTable"
 
 export default async function RolesManagement() {
 

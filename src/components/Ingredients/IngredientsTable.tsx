@@ -16,7 +16,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import DeleteDialog from "@/components/DeleteDialog"
 import IngredientDialog from "./IngredientDialog"
 
-import { addIngredient as addIngredientAction, editIngredient as editIngredientAction, deleteIngredient as deleteIngredientAction} from "@/lib/actions/ingredients"
+import { addIngredient, editIngredient, deleteIngredient} from "@/lib/actions/ingredients"
 
 interface IngredientsTableProps {
     ingredients: any[]
@@ -25,10 +25,10 @@ interface IngredientsTableProps {
 export default function IngredientsTable({ ingredients }: IngredientsTableProps) {
 
     const [searchQuery, setSearchQuery] = useState("")
-    const [addIngredient, setAddIngredient] = useState(false)
-    const [editIngredient, setEditIngredient] = useState(false)
-    const [deleteIngredient, setDeleteIngredient] = useState(false)
-    const [selectedIngredient, setSelectedIngredient] = useState<any>(null)
+    const [addIngredientDialog, setAddIngredientDialog] = useState(false)
+    const [editIngredientDialog, setEditIngredientDialog] = useState(false)
+    const [deleteIngredientDialog, setDeleteIngredientDialog] = useState(false)
+    const [selectedIngredientDialog, setSelectedIngredientDialog] = useState<any>(null)
 
     // Filter ingredients based on search query and active tab
     const filteredIngredients = ingredients.filter((ingredient) => {
@@ -42,14 +42,14 @@ export default function IngredientsTable({ ingredients }: IngredientsTableProps)
 
     // Handle edit ingredient
     const handleEditIngredient = (ingredient: any) => {
-        setSelectedIngredient(ingredient)
-        setEditIngredient(true)
+        setSelectedIngredientDialog(ingredient)
+        setEditIngredientDialog(true)
     }
 
     // Handle delete ingredient
     const handleDeleteIngredient = (ingredient: any) => {
-        setSelectedIngredient(ingredient)
-        setDeleteIngredient(true)
+        setSelectedIngredientDialog(ingredient)
+        setDeleteIngredientDialog(true)
     }
 
     return (
@@ -61,7 +61,7 @@ export default function IngredientsTable({ ingredients }: IngredientsTableProps)
                     <div className="flex justify-between items-center">
                         <CardTitle className="text-[#2e6930] text-xl">Ingredients</CardTitle>
                         <div className="flex items-center gap-2">
-                            <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={() => setAddIngredient(true)}>
+                            <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={() => setAddIngredientDialog(true)}>
                                 <Plus className="h-4 w-4 mr-1" />
                                 Add Ingredient
                             </Button>
@@ -144,11 +144,11 @@ export default function IngredientsTable({ ingredients }: IngredientsTableProps)
                 </CardContent>
             </Card>
 
-            <IngredientDialog open={addIngredient} setOpen={setAddIngredient} title="Add Ingredient" description="Add a new item to your inventory. Fill in all the details below." buttonText="Add Ingredient" serverAction={addIngredientAction} />
+            <IngredientDialog open={addIngredientDialog} setOpen={setAddIngredientDialog} title="Add Ingredient" description="Add a new item to your inventory. Fill in all the details below." buttonText="Add Ingredient" serverAction={addIngredient} />
             
-            {selectedIngredient && <IngredientDialog open={editIngredient} setOpen={setEditIngredient} title={"Edit Ingredient"} description={"Edit an ingredient by filling out the details below. "} buttonText={"Edit Ingredient"} serverAction={editIngredientAction.bind(null, selectedIngredient.id)}/>}
+            {selectedIngredientDialog && <IngredientDialog open={editIngredientDialog} setOpen={setEditIngredientDialog} title={"Edit Ingredient"} description={"Edit an ingredient by filling out the details below. "} buttonText={"Edit Ingredient"} serverAction={editIngredient.bind(null, selectedIngredientDialog.id)}/>}
 
-            {selectedIngredient && (<DeleteDialog open={deleteIngredient} setOpen={setDeleteIngredient} title="Confirm Deletion" message={`Are you sure you want to delete ${selectedIngredient.name}? This action cannot be undone.`} buttonText={"Delete Ingredient"} serverAction={deleteIngredientAction.bind(null, selectedIngredient.id)}></DeleteDialog>)}
+            {selectedIngredientDialog && (<DeleteDialog open={deleteIngredientDialog} setOpen={setDeleteIngredientDialog} title="Confirm Deletion" message={`Are you sure you want to delete ${selectedIngredientDialog.name}? This action cannot be undone.`} buttonText={"Delete Ingredient"} serverAction={deleteIngredient.bind(null, selectedIngredientDialog.id)}></DeleteDialog>)}
         </>
     )
 }

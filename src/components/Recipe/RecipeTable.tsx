@@ -1,57 +1,57 @@
 "use client"
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from './ui/dialog'
-import { Label } from '@radix-ui/react-label'
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/select'
-import { Tabs, TabsList, TabsTrigger } from './ui/tabs'
-import { Filter, Plus, Search, Download, Table as TableIcon, ArrowUpDown, Pencil, Trash2 } from 'lucide-react'
+import { Plus, Search, Pencil, Trash2 } from 'lucide-react'
 import React, { useState } from 'react'
-import { Button } from './ui/button'
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
-import { DialogHeader, DialogFooter } from './ui/dialog'
-import { Input } from './ui/input'
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table'
-import { Textarea } from './ui/textarea'
-import IngredientDialog from './IngredientDialog'
-import DeleteDialog from './DeleteDialog'
+import { Button } from '../ui/button'
+import { Card, CardHeader, CardTitle, CardContent } from '../ui/card'
+import { Input } from '../ui/input'
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../ui/table'
+import DeleteDialog from '../DeleteDialog'
+import RecipeDialog from './RecipeDialog'
+import { addRecipe, editRecipe, deleteRecipe } from '@/lib/actions/recipes'
 
 interface RecipeProps {
-  menuItem: string
-  recipes: any[]
+  menuItem: any
+  recipes: any[],
+  ingredients: any[]
 }
 
-export default function RecipeTable({ recipes, menuItem }: RecipeProps) {
+export default function RecipeTable({ recipes, menuItem, ingredients }: RecipeProps) {
 
   const [searchQuery, setSearchQuery] = useState("")
-  const [addRecipeDialogOpen, setAddRecipeDialogOpen] = useState(false)
-  const [editRecipeDialogOpen, setEditRecipeDialogOpen] = useState(false)
-  const [deleteConfirmDialogOpen, setDeleteConfirmDialogOpen] = useState(false)
-  const [selectedIngredient, setSelectedIngredient] = useState<any>(null)
+  const [addRecipeDialog, setAddRecipeDialog] = useState(false)
+  const [editRecipeDialog, setEditRecipeDialog] = useState(false)
+  const [deleteConfirmDialog, setDeleteConfirmDialog] = useState(false)
+  const [selectedIngredient, setSelected] = useState<any>(null)
 
   // Filter recipes based on search query and active tab
   const filteredRecipes = recipes.filter((recipe) => {
     return recipe.ingredients.name.toLowerCase().includes(searchQuery.toLowerCase())
   })
 
+  const handleAddRecipe = async () => {
+    setAddRecipeDialog(true)
+  }
+
   // Handle edit recipe
-  const handleEditRecipe = (recipe: any) => {
-    setSelectedIngredient(recipe)
-    setEditRecipeDialogOpen(true)
+  const handleEditRecipe = async (recipe: any) => {
+    setSelected(recipe)
+    setEditRecipeDialog(true)
   }
 
   // Handle delete recipe
-  const handleDeleteRecipe = (recipe: any) => {
-    console.log(recipe)
-    setSelectedIngredient(recipe)
-    setDeleteConfirmDialogOpen(true)
+  const handleDeleteRecipe = async (recipe: any) => {
+    setSelected(recipe)
+    setDeleteConfirmDialog(true)
   }
+
   return (
     <>
       <Card className="border border-[#e8f2e8] rounded-2xl">
         <CardHeader className="pb-2">
           <div className="flex justify-between items-center">
-            <CardTitle className="text-[#2e6930] text-xl">{`${menuItem} Recipe`}</CardTitle>
+            <CardTitle className="text-[#2e6930] text-xl">{`${menuItem.name} Recipe`}</CardTitle>
             <div className="flex items-center gap-2">
-              <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={() => setAddRecipeDialogOpen(true)}>
+              <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={handleAddRecipe}>
                 <Plus className="h-4 w-4 mr-1" />
                 Add Ingredient
               </Button>
@@ -127,8 +127,11 @@ export default function RecipeTable({ recipes, menuItem }: RecipeProps) {
       </Card>
 
 
-      {/* TODO: Create recipe dialog */}
-      <DeleteDialog open={deleteConfirmDialogOpen} setOpen={setDeleteConfirmDialogOpen} title={'Confirm Deletion'} message={`Are you sure you want to delete ${selectedIngredient?.ingredients.name} from the recipe?`} buttonText={'Delete Ingredient'}></DeleteDialog>
+      <DeleteDialog open={deleteConfirmDialog} setOpen={setDeleteConfirmDialog} title={'Confirm Deletion'} message={`Are you sure you want to delete ${selectedIngredient?.ingredients.name} from the recipe?`} buttonText={'Delete Ingredient'} serverAction={deleteRecipe.bind(null, selectedIngredient?.id)} />
+
+      <RecipeDialog open={addRecipeDialog} setOpen={setAddRecipeDialog} title={'Add Recipe'} description={'To add a recipe item, fill in the info below.'} buttonText={'Add Recipe'} menuItem={menuItem} serverAction={addRecipe} ingredientItems={ingredients}/>
+
+      <RecipeDialog open={editRecipeDialog} setOpen={setEditRecipeDialog} title={'Edit Recipe'} description={'To edit a recipe item, fill in the info below'} buttonText={'Edit Recipe'} serverAction={editRecipe.bind(null, selectedIngredient?.id)} menuItem={menuItem} ingredientItems={ingredients} />
 
     </>
   )
