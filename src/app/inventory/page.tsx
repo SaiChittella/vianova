@@ -1,17 +1,12 @@
 import { AlertCircle, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Sidebar from "@/components/Sidebar";
 import InventoryComponent from "./inventoryItems";
 import { createClient } from "@/lib/utils/supabase/server";
 import countStock from "@/lib/utils/countInventory";
-import { formatDistanceToNow } from "date-fns";
 import RecentActivity from "./recentActivity";
+import CreateOrder from "@/components/CreateOrder";
 
 export default async function InventoryServer() {
 	let lowStockCount = 0,
@@ -152,18 +147,15 @@ export default async function InventoryServer() {
 						/>
 					</div>
 
-					<div className="lg:col-span-1 space-y-6">
-						<Card className="border border-[#e8f2e8] rounded-2xl">
+					<div className="lg:col-span-1 space-y-6 w-full">
+						<Card className="border border-[#e8f2e8] rounded-2xl max-w-screen-xl w-full">
 							<CardHeader className="pb-2">
 								<CardTitle className="text-[#2e6930] text-lg">
 									Quick Actions
 								</CardTitle>
 							</CardHeader>
-							<CardContent className="space-y-4">
-								<Button className="w-full bg-[#2e6930] hover:bg-[#1e4920] justify-start hover:cursor-pointer">
-									<ShoppingCart className="h-4 w-4 mr-2" />
-									Create Order
-								</Button>
+							<CardContent className="space-y-4 w-full">
+								<CreateOrder></CreateOrder>
 								<Button
 									variant="outline"
 									className="w-full border-[#2e6930] text-[#2e6930] justify-start hover:cursor-pointer"
