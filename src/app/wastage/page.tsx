@@ -59,24 +59,31 @@ export default async function WastageServer() {
 
 	const { data: wastageData, error: wastageDataError } = await supabase
 		.from("wastages")
-		.select("*, menu_items!inner(*)");
+		.select("*, inventory_transactions!inner(*, ingredients!inner(*))");
 
 	if (wastageDataError) {
 		console.error("Error fetching wastage data:", wastageDataError);
-		return;
 	}
 
-	let totalWaste = 0,
-		totalCost = 0;
-
-	for (let i = 0; i < wastageData?.length; i++) {
-		totalWaste += wastageData[i].quantity;
-		totalCost += wastageData[i].quantity * wastageData[i].menu_items.price;
+	if (!wastageData) {
+		console.error("No wastage data found");
+		return null;
 	}
 
-	const { data: menuItemsData, error: menuItemsError } = await supabase
-		.from("menu_items")
-		.select("*");
+	let totalWaste = 0, totalCost = 0;
+
+	// console.log(wastageData)
+
+	for (let i = 0; i < wastageData.length; i++) {
+		
+		totalWaste += wastageData[i].inventory_transactions.quantity_change * wastageData[i].inventory_transactions.ingredients.cost_per_unit;
+		totalCost += wastageData[i].inventory_transactions.quantity_change * wastageData[i].inventory_transactions.ingredients.cost_per_unit;
+
+	}
+
+	const reason = findHighestWasteReason(countWasteReasons(wastageData))
+	console.log(reason)
+
 
 	return (
 		<div className="flex min-h-screen bg-white">
@@ -101,7 +108,7 @@ export default async function WastageServer() {
 						</CardHeader>
 						<CardContent>
 							<div className="text-3xl font-semibold">
-								{totalWaste} items/lbs
+								{totalWaste * -1} items/lbs
 							</div>
 							<p className="text-sm text-gray-500">Last 7 days</p>
 						</CardContent>
@@ -115,7 +122,7 @@ export default async function WastageServer() {
 						</CardHeader>
 						<CardContent>
 							<div className="text-3xl font-semibold">
-								${totalCost.toFixed(2)}
+								${totalCost * -1}
 							</div>
 							<p className="text-sm text-gray-500">
 								Estimated value of wasted food
@@ -130,22 +137,52 @@ export default async function WastageServer() {
 							</CardTitle>
 						</CardHeader>
 						<CardContent>
-							<div className="text-3xl font-semibold">x</div>
+							<div className="text-3xl font-semibold">{reason?.reason}</div>
 							<p className="text-sm text-gray-500">
-								x lbs wasted
+								${reason?.count} lost
 							</p>
 						</CardContent>
 					</Card>
 				</div>
 				<div>
 					<div>
-						<WasteLog
-							wastageData={wastageData}
-							menuItems={menuItemsData!}
-						></WasteLog>
+						<WasteLog wastageData={wastageData}></WasteLog>
 					</div>
 				</div>
 			</div>
 		</div>
 	);
 }
+
+function countWasteReasons(data: any[]): Record<string, number> {
+	const wasteTypes = ["spoilage", "overproduction", "quality issues", "preparation waste", "expired"];
+	const wasteCount: Record<string, number> = {
+	  spoilage: 0,
+	  overproduction: 0,
+	  "quality issues": 0,
+	  "preparation waste": 0,
+	  expired: 0,
+	};
+  
+	for (const entry of data) {
+	  if (wasteTypes.includes(entry.waste_reason.toLowerCase())) {
+		wasteCount[entry.waste_reason.toLowerCase()]+= entry.inventory_transactions.quantity_change * -1 * entry.inventory_transactions.ingredients.cost_per_unit;
+	  }
+	}
+  
+	return wasteCount;
+  }
+
+  function findHighestWasteReason(wasteCounts: Record<string, number>): { reason: string; count: number } | null {
+	let highestReason: string | null = null;
+	let highestCount = 0;
+  
+	for (const [reason, count] of Object.entries(wasteCounts)) {
+	  if (count > highestCount) {
+		highestReason = reason;
+		highestCount = count;
+	  }
+	}
+  
+	return highestReason ? { reason: highestReason, count: highestCount } : null;
+  }

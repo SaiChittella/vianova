@@ -49,17 +49,16 @@ import { Progress } from "@/components/ui/progress";
 import LogWaste from "@/components/LogWaste";
 
 interface WasteLogProps {
-	wastageData: any[];
-	menuItems: any[];
+	wastageData: any[]
 }
 
-export default function WasteLog({ wastageData, menuItems }: WasteLogProps) {
+export default function WasteLog({ wastageData }: WasteLogProps) {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedTab, setSelectedTab] = useState("all");
 
 	const filteredWasteItems = wastageData.filter((item) => {
 		const matchesSearch =
-			item.menu_items.name
+			item.inventory_transactions.ingredients.name
 				.toLowerCase()
 				.includes(searchQuery.toLowerCase()) ||
 			item.waste_reason.toLowerCase().includes(searchQuery.toLowerCase());
@@ -86,7 +85,7 @@ export default function WasteLog({ wastageData, menuItems }: WasteLogProps) {
 						Waste Log
 					</CardTitle>
 					<div className="flex items-center gap-2">
-						<LogWaste menuItems={menuItems}></LogWaste>
+						{/* <LogWaste menuItems={menuItems}></LogWaste> */}
 					</div>
 				</div>
 			</CardHeader>
@@ -160,11 +159,11 @@ export default function WasteLog({ wastageData, menuItems }: WasteLogProps) {
 								filteredWasteItems.map((item) => (
 									<TableRow key={item.id}>
 										<TableCell className="font-medium">
-											{item.menu_items.name}
+											{item.inventory_transactions.ingredients.name}
 										</TableCell>
 										<TableCell>
-											{item.quantity}{" "}
-											{item.unit_of_measurement}
+											{item.inventory_transactions.quantity_change * -1}{" "}
+											{item.inventory_transactions.ingredients.unit_of_measure}
 										</TableCell>
 										<TableCell>
 											<Badge
@@ -188,11 +187,11 @@ export default function WasteLog({ wastageData, menuItems }: WasteLogProps) {
 											</Badge>
 										</TableCell>
 										<TableCell>
-											${item.menu_items.price.toFixed(2)}
+											${item.inventory_transactions.ingredients.cost_per_unit.toFixed(2)}
 										</TableCell>
 										<TableCell>
 											{new Date(
-												item.date
+												item.inventory_transactions.transaction_date
 											).toLocaleDateString()}
 										</TableCell>
 									</TableRow>
