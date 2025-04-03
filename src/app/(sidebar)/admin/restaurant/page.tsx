@@ -3,6 +3,7 @@ import { deleteRestaurant, editRestaurant } from '@/lib/actions/restaurant'
 import { createClient } from '@/lib/utils/supabase/server'
 import { ChevronDown, Store } from 'lucide-react'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import React from 'react'
 
 export default async function page() {
@@ -13,7 +14,7 @@ export default async function page() {
         .select()
         .single()
 
-    console.log(JSON.stringify(restaurant, null, 4))
+    if (error) redirect("/error")
 
     return (
 

@@ -2,16 +2,19 @@ import Link from "next/link"
 import { BookOpen, ChevronDown } from "lucide-react"
 import RecipeTable from "@/components/Recipe/RecipeTable"
 import { createClient } from "@/lib/utils/supabase/server"
+import { redirect } from "next/navigation"
 
 export default async function RecipesManagement() {
 
     const supabase = await createClient()
-    const { data: ingredients } = await supabase.from("ingredients").select()
+    const { data: ingredients, error: ingredientsError } = await supabase.from("ingredients").select()
+    if (ingredientsError) redirect("/error")
 
-    const { data: menuItems } = await supabase
+    const { data: menuItems, error: menuItemError } = await supabase
         .from("menu_items")
         .select()
 
+    if (menuItemError) redirect("/error")
     return (
 
 
@@ -40,6 +43,7 @@ export default async function RecipesManagement() {
                             .select("*, ingredients(*)")
                             .eq("menu_item_id", item.id)
                         
+                        if (error) redirect("/error")
 
                         return (
                             <div key={item.id}><RecipeTable menuItem={item} recipes={data!} ingredients={ingredients!}></RecipeTable></div>
