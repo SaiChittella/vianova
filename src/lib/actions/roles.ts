@@ -1,7 +1,6 @@
-"use server"
+"use server";
 
 import { createClient } from "@/lib/utils/supabase/server";
-import { revalidatePath } from "next/cache";
 import createSuperClient from "../utils/supabase/superclient";
 import { redirect } from "next/navigation";
 import { InsertRoles, UpdateRole } from "../types";
@@ -22,8 +21,7 @@ export async function addRole(role: InsertRoles) {
         .from("roles")
         .insert(role)
 
-    if (roleError) redirect("/error")
-
+	if (roleError) redirect("/error");
 }
 
 export async function editRole(id: string, role: UpdateRole) {

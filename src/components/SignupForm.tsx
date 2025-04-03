@@ -1,7 +1,4 @@
 "use client";
-
-import Link from "next/link";
-
 interface SignupProps {
 	signupAction: (formData: FormData) => Promise<void>;
 }

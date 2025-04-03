@@ -1,5 +1,4 @@
 "use client";
-import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import {
 	Dialog,
@@ -8,7 +7,6 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "../ui/dialog";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import {
@@ -31,7 +29,14 @@ interface AddItemsProps {
 	serverAction: (ingredient: InsertIngredient, quantity: number) => Promise<void>,
 }
 
-export default function IngredientDialog({ open, setOpen, title, description, buttonText, serverAction }: AddItemsProps) {
+export default function IngredientDialog({
+	open,
+	setOpen,
+	title,
+	description,
+	buttonText,
+	serverAction,
+}: AddItemsProps) {
 	const [quantity, setQuantity] = useState("");
 	const [newItem, setNewItem] = useState({
 		name: "",
@@ -68,9 +73,7 @@ export default function IngredientDialog({ open, setOpen, title, description, bu
 					<DialogTitle className="text-[#2e6930]">
 						{title}
 					</DialogTitle>
-					<DialogDescription>
-						{description}
-					</DialogDescription>
+					<DialogDescription>{description}</DialogDescription>
 				</DialogHeader>
 				<div className="grid gap-4 py-4">
 					<div className="grid grid-cols-1 gap-2">
@@ -106,9 +109,7 @@ export default function IngredientDialog({ open, setOpen, title, description, bu
 								type="number"
 								placeholder="e.g., 20"
 								value={quantity}
-								onChange={(e) =>
-									setQuantity(e.target.value)
-								}
+								onChange={(e) => setQuantity(e.target.value)}
 							/>
 						</div>
 					</div>

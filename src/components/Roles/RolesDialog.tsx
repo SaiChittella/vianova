@@ -1,9 +1,16 @@
-import React, { useState } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
-import { Label } from '../ui/label'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button'
-import { Textarea } from '../ui/textarea'
+import React, { useState } from "react";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "../ui/dialog";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,24 +43,30 @@ export default function RoleDialog({ open, setOpen, serverAction, title, descrip
     setOpen(false)
   }
 
-  return (
-    <div className="flex items-center gap-2">
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
+	return (
+		<div className="flex items-center gap-2">
+			<Dialog open={open} onOpenChange={setOpen}>
+				<DialogTrigger asChild></DialogTrigger>
+				<DialogContent className="max-w-3xl">
+					<DialogHeader>
+						<DialogTitle className="text-[#2e6930]">
+							{title}
+						</DialogTitle>
+						<DialogDescription>{description}</DialogDescription>
+					</DialogHeader>
 
-        </DialogTrigger>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle className="text-[#2e6930]">{title}</DialogTitle>
-            <DialogDescription>{description}</DialogDescription>
-          </DialogHeader>
-
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 gap-4">
-              <div className="space-y-2 col-span-3">
-                <Label htmlFor="name">Email</Label>
-                <Input id="name" placeholder="someone@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} readOnly={constantEmail} />
-              </div>
+					<div className="grid gap-4 py-4">
+						<div className="grid grid-cols-4 gap-4">
+							<div className="space-y-2 col-span-3">
+								<Label htmlFor="name">Email</Label>
+								<Input
+									id="name"
+									placeholder="someone@gmail.com"
+									value={email}
+									onChange={(e) => setEmail(e.target.value)}
+									readOnly={constantEmail}
+								/>
+							</div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2 col-span-2">

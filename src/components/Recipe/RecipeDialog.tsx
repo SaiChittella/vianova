@@ -1,5 +1,4 @@
 "use client";
-import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import {
 	Dialog,
@@ -8,7 +7,6 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "../ui/dialog";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import {
@@ -33,16 +31,27 @@ interface RecipeDialogProps {
     ingredientItems: Ingredient[]
 }
 
-export default function RecipeDialog({ open, setOpen, title, description, buttonText, serverAction, menuItem, ingredientItems }: RecipeDialogProps) {
-    const [ingredient, setIngredient] = useState(ingredientItems[0])
-    const [quantity, setQuantity] = useState("")
+export default function RecipeDialog({
+	open,
+	setOpen,
+	title,
+	description,
+	buttonText,
+	serverAction,
+	menuItem,
+	ingredientItems,
+}: RecipeDialogProps) {
+	const [ingredient, setIngredient] = useState(ingredientItems[0]);
+	const [quantity, setQuantity] = useState("");
 
-    async function handleSubmit() {
-
-        serverAction({"menu_item_id": menuItem.id, "quantity": parseInt(quantity), "ingredient_id": ingredient.id})
-        setOpen(false)
-
-    }
+	async function handleSubmit() {
+		serverAction({
+			menu_item_id: menuItem.id,
+			quantity: parseInt(quantity),
+			ingredient_id: ingredient.id,
+		});
+		setOpen(false);
+	}
 
     return (
         <div className="flex items-center gap-2">
@@ -71,22 +80,36 @@ export default function RecipeDialog({ open, setOpen, title, description, button
                 </Select>
               </div>
 
-              <div className="space-y-2">
-							<Label>Quantity</Label>
-							<Input id="quantity" type="number" placeholder="e.g., 20" value={quantity} onChange={(e) => 	setQuantity(e.target.value) } />
+							<div className="space-y-2">
+								<Label>Quantity</Label>
+								<Input
+									id="quantity"
+									type="number"
+									placeholder="e.g., 20"
+									value={quantity}
+									onChange={(e) =>
+										setQuantity(e.target.value)
+									}
+								/>
+							</div>
 						</div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={handleSubmit}>
-              {buttonText}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
-    )
+					</div>
+					<DialogFooter>
+						<Button
+							variant="outline"
+							onClick={() => setOpen(false)}
+						>
+							Cancel
+						</Button>
+						<Button
+							className="bg-[#2e6930] hover:bg-[#1e4920]"
+							onClick={handleSubmit}
+						>
+							{buttonText}
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</div>
+	);
 }

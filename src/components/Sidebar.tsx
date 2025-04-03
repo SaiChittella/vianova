@@ -4,7 +4,6 @@ import {
 	ChartColumn,
 	Settings,
 	CircleHelp,
-	CircleUserRound,
 	Biohazard,
 } from "lucide-react";
 import Link from "next/link";
@@ -24,7 +23,8 @@ export default function Sidebar() {
 				/>
 			</div>
 
-			<div className="flex flex-col items-center space-y-10">
+			{/* Centered Icons */}
+			<div className="flex flex-col items-center justify-center space-y-10 flex-1">
 				<Link href="/dashboard">
 					<LayoutDashboard
 						className={`h-8 w-8 text-[#388E3C] hover:cursor-pointer ${
@@ -73,12 +73,6 @@ export default function Sidebar() {
 								: "bg-none"
 						}`}
 					/>
-				</Link>
-			</div>
-
-			<div>
-				<Link href="/profile">
-					<CircleUserRound className="h-8 w-8 hover:cursor-pointer text-[#388E3C]" />
 				</Link>
 			</div>
 		</div>
