@@ -44,10 +44,10 @@ export default function Sidebar() {
 					/>
 				</Link>
 
-				<Link href="/settings">
+				<Link href="/admin">
 					<Settings
 						className={`h-8 w-8 text-[#388E3C] hover:cursor-pointer ${
-							pathname === "/settings"
+							pathname === "/admin"
 								? "bg-[#1B5E20] rounded-lg p-1 text-white"
 								: "bg-none"
 						}`}

@@ -7,12 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function FAQPage() {
   return (
-    <div className="flex min-h-screen bg-white">
-    
-    {/* TODO: Add sidebar */}
-
-      {/* Main content */}
-      <div className="flex-1 p-8">
+      <div className="flex-1">
         <div className="mb-8">
           <h1 className="text-4xl font-medium text-[#2e6930]">Frequently Asked Questions</h1>
           <p className="text-gray-500 mt-1">Here are the most common questions we get asked.</p>
@@ -168,7 +163,7 @@ export default function FAQPage() {
           </Card>
         </div>
       </div>
-    </div>
+
   )
 }
 
