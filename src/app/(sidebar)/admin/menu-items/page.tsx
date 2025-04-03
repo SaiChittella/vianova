@@ -2,13 +2,14 @@ import Link from "next/link"
 import { ArrowUpDown, ChevronDown, Coffee, Pencil, Plus, Search, Trash2 } from "lucide-react"
 import MenuItemsTable from "@/components/Menu Item/MenuItemsTable"
 import { createClient } from "@/lib/utils/supabase/server"
+import { redirect } from "next/navigation"
 
 export default async function MenuItems() {
 
     const supabase = await createClient()
-    const {data: menuItems} = await supabase.from("menu_items").select()
+    const { data: menuItems, error } = await supabase.from("menu_items").select()
 
-    console.log(JSON.stringify(menuItems,null,4))
+    if (error) redirect("/error")
 
     return (
             <div className="flex-1">

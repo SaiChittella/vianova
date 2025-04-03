@@ -1,6 +1,7 @@
 "use server";
 import { createClient } from "@/lib/utils/supabase/server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 interface logWasteProps {
 	name: string;
@@ -11,10 +12,6 @@ interface logWasteProps {
 
 export default async function logWaste(wastedItem: logWasteProps) {
 	const supabase = await createClient();
-
-	console.log(
-		"WASTAGE BEING REPORTED: " + JSON.stringify(wastedItem, null, 4)
-	);
 
 	const { data: inventoryTransactionId, error: inventoryTransactionError } =
 		await supabase
@@ -27,13 +24,7 @@ export default async function logWaste(wastedItem: logWasteProps) {
 			.select("id")
 			.single();
 
-	if (inventoryTransactionError) {
-		console.error(
-			"Error inserting inventory transaction data:",
-			inventoryTransactionError
-		);
-		return;
-	}
+	if (inventoryTransactionError) redirect("/error");
 
 	const { data: wastageData, error: wastageError } = await supabase
 		.from("wastages")
@@ -41,6 +32,8 @@ export default async function logWaste(wastedItem: logWasteProps) {
 			waste_reason: wastedItem.waste_reason,
 			inventory_transaction_id: inventoryTransactionId.id,
 		});
+	
+	if (wastageError) redirect("/error");
 
 	revalidatePath("/wastage");
 }

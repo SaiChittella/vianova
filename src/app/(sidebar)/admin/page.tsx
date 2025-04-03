@@ -3,23 +3,30 @@ import { ChevronRight, ShieldCheck, Users, BookOpen, Coffee, Store, Egg } from '
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/utils/supabase/server"
 import RecentActivity from "@/components/RecentActivity"
+import { redirect } from "next/navigation"
 
 export default async function AdminDashboard() {
 
     // TODO: Redirect if not an admin
     const supabase = await createClient()
 
-    const { count: ingredientCount, error } = await supabase
+    const { count: ingredientCount, error: ingredientError } = await supabase
         .from('ingredients')
         .select('*', { count: 'exact', head: true });
+    
+    if (ingredientError) redirect("/error")
 
-    const { count: menuItemCount } = await supabase
+    const { count: menuItemCount, error: menuItemCountError } = await supabase
         .from('menu_items')
         .select('*', { count: 'exact', head: true });
 
-    const { count: userCount } = await supabase
+    if (menuItemCountError) redirect("/error")
+
+    const { count: userCount, error: userCountError } = await supabase
         .from('roles')
         .select('*', { count: 'exact', head: true });
+    
+    if (menuItemCountError) redirect("/error")
 
     const {
         data: inventoryTransactionsData,
@@ -28,6 +35,8 @@ export default async function AdminDashboard() {
         .from("inventory_transactions")
         .select("*, ingredients(name, unit_of_measure)");
 
+    if (inventoryTransactionError) redirect("/error")
+        
     inventoryTransactionsData?.sort(
         (a: any, b: any) =>
             new Date(b.transaction_date).getTime() -

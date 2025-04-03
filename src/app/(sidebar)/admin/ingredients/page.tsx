@@ -2,15 +2,15 @@ import Link from "next/link"
 import { ChevronDown, Egg, } from "lucide-react"
 import IngredientsTable from "@/components/Ingredients/IngredientsTable"
 import { createClient } from "@/lib/utils/supabase/server"
+import { redirect } from "next/navigation"
 
 export default async function IngredientsManagement() {
 
     const supabase = await createClient()
 
-    const { data: ingredients } = await supabase.from("ingredients").select("id, name, description, unit_of_measure, cost_per_unit")
+    const { data: ingredients, error } = await supabase.from("ingredients").select("id, name, description, unit_of_measure, cost_per_unit")
 
-    console.log(ingredients)
-
+    if (error) redirect("/error")
 
     return (
         <div className="flex-1">
