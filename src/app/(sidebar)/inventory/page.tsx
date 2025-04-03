@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Sidebar from "@/components/Sidebar";
 import InventoryComponent from "@/components/inventoryItems";
-import { createClient } from "@/lib/utils/supabase/server";
+import { createClient } from "@/lib/utils/supabase/server";	
 import countStock from "@/lib/utils/countInventory";
 import RecentActivity from "@/components/RecentActivity";
 import CreateOrder from "@/components/CreateOrder";
