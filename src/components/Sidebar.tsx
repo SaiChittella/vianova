@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 export default function Sidebar() {
 	const pathname = usePathname();
@@ -15,7 +16,7 @@ export default function Sidebar() {
 	return (
 		<div className="bg-[#E8F5E9] border-[#E8F5E9] w-[120px] h-screen fixed flex flex-col justify-between items-center py-10">
 			<div>
-				<img
+				<Image
 					src="/vianova_logo.svg"
 					alt="Vianova Logo"
 					className="h-20 w-20"

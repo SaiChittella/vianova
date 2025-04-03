@@ -21,19 +21,22 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { addInventoryTransaction } from "@/lib/actions/inventoryTransactions";
+import { Ingredient } from "@/lib/types";
 
 interface LogTransactionProps {
-	ingredients: { id: string; name: string }[];
+	ingredients: Ingredient[];
 }
 
 export default function LogTransaction({ ingredients }: LogTransactionProps) {
 	const [inventoryDialogOpen, setInventoryDialogOpen] = useState(false);
+	const [ingredient, setIngredient] = useState(ingredients[0]);
 
-	const [transactionData, setTransactionData] = useState({
+	const [transactionData, setTransactionData] = useState<{
+		transaction_type: "sale" | "adjustment" | "purchase",
+		quantity_change: string,
+	}>({
 		transaction_type: "adjustment",
-		name: "",
 		quantity_change: "",
-		ingredient_id: "",
 	});
 
 	const handleChange = (key: string, value: string) => {
@@ -41,7 +44,7 @@ export default function LogTransaction({ ingredients }: LogTransactionProps) {
 	};
 
 	const handleSubmit = async () => {
-		await addInventoryTransaction(transactionData);
+		await addInventoryTransaction({...transactionData, quantity_change: parseFloat(transactionData.quantity_change), ingredient_id: ingredient.id});
 		setInventoryDialogOpen(false);
 	};
 
@@ -94,18 +97,13 @@ export default function LogTransaction({ ingredients }: LogTransactionProps) {
 					<div className="space-y-2">
 						<Label htmlFor="item">Item</Label>
 						<Select
-							value={transactionData.name}
+							value={ingredient.name.toLowerCase()}
 							onValueChange={(value) => {
 								const selectedIngredient = ingredients.find(
 									(item) => item.name.toLowerCase() === value
 								);
-								handleChange("name", value);
-								handleChange(
-									"ingredient_id",
-									selectedIngredient
-										? selectedIngredient.id
-										: ""
-								);
+
+								if (selectedIngredient) setIngredient(selectedIngredient)
 							}}
 						>
 							<SelectTrigger>

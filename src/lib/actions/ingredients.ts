@@ -1,8 +1,9 @@
 "use server";
 import { createClient } from "@/lib/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { InsertIngredient, InsertInventoryTransaction, UpdateIngredient } from "../types";
 
-export async function addIngredient(ingredientsData: any, quantity: number) {
+export async function addIngredient(ingredientsData: InsertIngredient, quantity: number) {
 	const supabase = await createClient();
 
 	const { data: ingredientId, error: insertIngredientsError } = await supabase
@@ -13,7 +14,7 @@ export async function addIngredient(ingredientsData: any, quantity: number) {
 
 	if (insertIngredientsError) redirect("/error")
 
-	const transaction = {
+	const transaction: InsertInventoryTransaction = {
 		transaction_type: "adjustment",
 		quantity_change: quantity,
 		ingredient_id: ingredientId?.id,
@@ -27,7 +28,7 @@ export async function addIngredient(ingredientsData: any, quantity: number) {
 	if (insertInventoryTransactionError) redirect("/error")
 }
 
-export async function editIngredient(id: any, ingredient: any, quantity: number) {
+export async function editIngredient(id: string, ingredient: UpdateIngredient, quantity: number) {
 
 	const supabase = await createClient();
 
@@ -46,7 +47,7 @@ export async function editIngredient(id: any, ingredient: any, quantity: number)
 	})
 
 	if (quantity > sum) {
-		const transaction = {
+		const transaction: InsertInventoryTransaction = {
 			transaction_type: "adjustment",
 			quantity_change: quantity - sum,
 			ingredient_id: id,
@@ -60,7 +61,7 @@ export async function editIngredient(id: any, ingredient: any, quantity: number)
 
 }
 
-export async function deleteIngredient(id: number) {
+export async function deleteIngredient(id: string) {
 
 	const supabase = await createClient();
 

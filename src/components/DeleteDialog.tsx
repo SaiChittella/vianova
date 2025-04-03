@@ -9,14 +9,14 @@ interface DeleteButtonProps {
     title: string,
     message: string,
     buttonText: string
-    serverAction?: () => void
+    serverAction: () => void
 }
 
 export default function DeleteDialog({open, setOpen, title, message, serverAction, buttonText}: DeleteButtonProps) {
 
   function clientDeleteAction() {
     setOpen(false)
-    serverAction && serverAction()
+    serverAction()
   }
 
   return (

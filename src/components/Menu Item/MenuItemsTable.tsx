@@ -9,9 +9,10 @@ import DeleteDialog from "../DeleteDialog"
 import MenuItemDialog from "./MenuItemDialog"
 
 import { addMenuItem, editMenuItem, deleteMenuItem } from "@/lib/actions/menuItems"
+import { InsertMenuItem, MenuItem } from "@/lib/types"
 
 interface MenuItemsTableProps {
-    menuItems: any[]
+    menuItems: MenuItem[]
 }
 
 export default function MenuItemsTable({ menuItems }: MenuItemsTableProps) {
@@ -22,25 +23,22 @@ export default function MenuItemsTable({ menuItems }: MenuItemsTableProps) {
     const [editMenuItemDialog, setEditMenuItemDialog] = useState(false)
     const [deleteMenuItemDialog, setDeleteMenuItemDialog] = useState(false)
     
-    const [selectedMenuItem, setSelectedMenuItem] = useState<any>("")
+    const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(null)
 
     const filteredMenuItems = menuItems.filter((item) => {
         const matchesSearch =
-            item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.description.toLowerCase().includes(searchQuery.toLowerCase())
-
+            item.name.toLowerCase().includes(searchQuery.toLowerCase())
         return matchesSearch
     })
 
     // Handle edit menu item
-    const handleEditMenuItem = (item: any) => {
+    const handleEditMenuItem = (item: MenuItem) => {
         setSelectedMenuItem(item)
         setEditMenuItemDialog(true)
     }
 
     // Handle delete menu item
-    const handleDeleteMenuItem = (item: any) => {
+    const handleDeleteMenuItem = (item: MenuItem) => {
         setSelectedMenuItem(item)
         setDeleteMenuItemDialog(true)
     }
@@ -88,7 +86,6 @@ export default function MenuItemsTable({ menuItems }: MenuItemsTableProps) {
                             <TableBody>
                             {filteredMenuItems.length > 0 ? (
                                     filteredMenuItems.map((item, index) => {
-                                        console.log(item)
                                         return (
                                         <TableRow key={index}>
                                             <TableCell className="font-medium">{item.name}</TableCell>

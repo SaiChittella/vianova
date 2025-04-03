@@ -3,6 +3,7 @@ import Sidebar from "@/components/Sidebar";
 import { createClient } from "@/lib/utils/supabase/server";
 import WasteLog from "./wasteLog";
 import { redirect } from "next/navigation";
+import { CompleteWastage } from "@/lib/types";
 
 export default async function WastageServer() {
 	const supabase = await createClient();
@@ -108,7 +109,7 @@ export default async function WastageServer() {
 
 // TODO: Move this to a utils file
 
-function countWasteReasons(data: any[]): Record<string, number> {
+function countWasteReasons(data: CompleteWastage[]): Record<string, number> {
 	const wasteTypes = [
 		"spoilage",
 		"overproduction",

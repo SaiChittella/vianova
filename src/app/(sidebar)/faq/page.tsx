@@ -106,10 +106,7 @@ export default function FAQPage() {
 							</AccordionTrigger>
 							<AccordionContent className="text-gray-600 px-4 faq-accordion-content">
 								<div className="py-3">
-									You can add, update, and remove inventory
-									items through the system's Inventory
-									Management section. It allows you to track
-									stock levels.
+									{"You can add, update, and remove inventory items through the system's Inventory Management section. It allows you to track stock levels."}
 								</div>
 							</AccordionContent>
 						</AccordionItem>
@@ -160,8 +157,7 @@ export default function FAQPage() {
 					</CardHeader>
 					<CardContent className="pt-4">
 						<p className="text-gray-600 mb-4">
-							If you can't find the answer to your question, our
-							support team is here to help.
+							{"If you can't find the answer to your question, our support team is here to help."}
 						</p>
 						<Button
 							className="bg-[#2e6930] hover:bg-[#1e4920]"

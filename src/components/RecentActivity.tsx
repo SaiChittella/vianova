@@ -13,12 +13,18 @@ import {
 } from "@/components/ui/dialog";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { CompleteInventoryTransaction, InventoryTransaction } from "@/lib/types";
 
-export default function RecentActivity({ initialData, fullData }: any) {
+interface RecentActivityProps {
+	initialData: CompleteInventoryTransaction[],
+	fullData: CompleteInventoryTransaction[],
+}
+
+export default function RecentActivity({ initialData, fullData }: RecentActivityProps) {
 	const [activityDialogOpen, setActivityDialogOpen] = useState(false);
 	const [activitySearchQuery, setActivitySearchQuery] = useState("");
 
-	const filteredActivities = fullData.filter((activity: any) => {
+	const filteredActivities = fullData.filter((activity) => {
 		const matchesSearch = activity.ingredients.name
 			.toLowerCase()
 			.includes(activitySearchQuery.toLowerCase());
@@ -29,7 +35,7 @@ export default function RecentActivity({ initialData, fullData }: any) {
 	return (
 		<div>
 			<div className="space-y-4 text-sm">
-				{initialData.map((item: any) => (
+				{initialData.map((item) => (
 					<div key={item.id}>
 						<p className="font-medium">
 							{item.transaction_type === "adjustment"
@@ -95,7 +101,7 @@ export default function RecentActivity({ initialData, fullData }: any) {
 					<div className="overflow-y-auto flex-1 pr-2">
 						<div className="space-y-4">
 							{filteredActivities.length > 0 ? (
-								filteredActivities.map((activity: any) => (
+								filteredActivities.map((activity) => (
 									<div
 										key={activity.id}
 										className="p-3 border border-[#e8f2e8] rounded-lg"

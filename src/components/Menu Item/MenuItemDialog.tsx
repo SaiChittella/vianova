@@ -4,15 +4,16 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
+import { InsertMenuItem, MenuItem } from '@/lib/types';
 
 interface MenuItemDialog {
   open: boolean;
   setOpen: (open: boolean) => void;
-  serverAction: (menuItem: any) => Promise<void>;
+  serverAction: (menuItem: InsertMenuItem) => Promise<void>;
   title: string;
   description: string;
   buttonText: string;
-  defaultValues?: { id?: any; name?: string; price?: string; description?: string };
+  defaultValues?: MenuItem;
 }
 
 export default function MenuItemDialog({
@@ -22,11 +23,11 @@ export default function MenuItemDialog({
   title,
   description,
   buttonText,
-  defaultValues = {},
+  defaultValues,
 }: MenuItemDialog) {
-  const [name, setName] = useState(defaultValues.name || '');
-  const [price, setPrice] = useState(defaultValues.price || '');
-  const [desc, setDesc] = useState(defaultValues.description || '');
+  const [name, setName] = useState(defaultValues?.name ? `${defaultValues.name}` : '');
+  const [price, setPrice] = useState(defaultValues?.price ? `${defaultValues.price}` : '');
+  const [desc, setDesc] = useState(defaultValues?.description ? `${defaultValues.description}` : '');
 
   async function handleSubmit() {
     const menuItem = { name, price: parseFloat(price), description: desc };

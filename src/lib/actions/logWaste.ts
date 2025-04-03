@@ -2,6 +2,7 @@
 import { createClient } from "@/lib/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { InsertWastage } from "../types";
 
 interface logWasteProps {
 	name: string;
@@ -31,7 +32,7 @@ export default async function logWaste(wastedItem: logWasteProps) {
 		.insert({
 			waste_reason: wastedItem.waste_reason,
 			inventory_transaction_id: inventoryTransactionId.id,
-		});
+		} as InsertWastage);
 	
 	if (wastageError) redirect("/error");
 

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/utils/supabase/server";
 import createSuperClient from "../utils/supabase/superclient";
+import { InsertRestaurant, InsertRoles } from "../types";
 
 export async function login(formData: FormData) {
 	const supabase = await createClient();
@@ -38,12 +39,14 @@ export async function signup(formData: FormData) {
 
 	if (error) redirect("/error")
 
-	const { data: restaurantData, error: insertError } = await supabase
+	const restaruantData: InsertRestaurant = {
+		email: formData.get("restaurantEmail") as string,
+		name: formData.get("restaurantName") as string,
+	}
+	
+		const { data: restaurantData, error: insertError } = await supabase
 		.from("restaurants")
-		.insert({
-			email: formData.get("restaurantEmail"),
-			name: formData.get("restaurantName"),
-		})
+		.insert(restaruantData)
 		.select()
 		.single();
 	
@@ -54,7 +57,7 @@ export async function signup(formData: FormData) {
 		user_id: userData.user?.id,
 		role: "admin",
 		restaurant_id: restaurantData?.id,
-	});
+	} as InsertRoles);
 	
 	if (userError) redirect("/error");
 

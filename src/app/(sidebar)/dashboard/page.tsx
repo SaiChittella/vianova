@@ -10,6 +10,7 @@ import CreateOrder from "@/components/CreateOrder";
 import { createClient } from "@/lib/utils/supabase/server";
 import LogWaste from "@/components/LogWaste";
 import LogTransaction from "@/components/LogTransaction";
+import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
 	const supabase = await createClient();
@@ -22,10 +23,7 @@ export default async function Dashboard() {
 		.from("ingredients")
 		.select("*");
 
-	if (ingredientsError) {
-		console.error("Error fetching ingredients data:", ingredientsError);
-		return;
-	}
+	if (ingredientsError) redirect("/error")
 
 	return (
 		<div className="flex min-h-screen bg-white ">

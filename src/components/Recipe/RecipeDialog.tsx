@@ -18,16 +18,17 @@ import {
 } from "@/components/ui/select";
 import { Input } from "../ui/input";
 import { useState } from "react";
+import { Ingredient, InsertRecipe, MenuItem } from "@/lib/types";
 
 interface RecipeDialogProps {
-	open: boolean;
-	setOpen: (open: boolean) => void;
-	title: string;
-	description: string;
-	buttonText: string;
-	serverAction: (recipe: any) => Promise<void>;
-	menuItem: any;
-	ingredientItems: any[];
+    open: boolean,
+    setOpen: (open: boolean) => void,
+    title: string,
+    description: string,
+    buttonText: string,
+    serverAction: (recipe: InsertRecipe) => Promise<void>,
+    menuItem: MenuItem,
+    ingredientItems: Ingredient[]
 }
 
 export default function RecipeDialog({
@@ -52,40 +53,32 @@ export default function RecipeDialog({
 		setOpen(false);
 	}
 
-	return (
-		<div className="flex items-center gap-2">
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="max-w-3xl">
-					<DialogHeader>
-						<DialogTitle className="text-[#2e6930]">
-							{title}
-						</DialogTitle>
-						<DialogDescription>{description}</DialogDescription>
-					</DialogHeader>
-					<div className="grid gap-4 py-4">
-						<div className="grid grid-cols-4 gap-4">
-							<div className="space-y-2 col-span-3 w-full">
-								<Label>Ingredient</Label>
-								<Select
-									onValueChange={(value) =>
-										setIngredient(value)
-									}
-								>
-									<SelectTrigger className="w-full">
-										<SelectValue placeholder="Select a ingredient"></SelectValue>
-									</SelectTrigger>
-									<SelectContent className="w-full">
-										{ingredientItems.map((item) => (
-											<SelectItem
-												key={item.id}
-												value={item}
-											>
-												{item.name}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-							</div>
+    return (
+        <div className="flex items-center gap-2">
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle className="text-[#2e6930]">{title}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 gap-4">
+              
+              <div className="space-y-2 col-span-3 w-full">
+                <Label>Ingredient</Label>
+                <Select onValueChange={(value) => setIngredient(ingredientItems.find((item) => item.id === value) ?? ingredient)}>
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a ingredient"></SelectValue>
+                    </SelectTrigger>
+                    <SelectContent className="w-full">
+                        {ingredientItems.map((item) => (
+                            <SelectItem key={item.id} value={item.id}>
+                                {item.name}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+              </div>
 
 							<div className="space-y-2">
 								<Label>Quantity</Label>
