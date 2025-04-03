@@ -57,8 +57,6 @@ export default function WasteLog({ wastageData, ingredients }: WasteLogProps) {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedTab, setSelectedTab] = useState("all");
 
-	console.log("WASTAGE DATA: " + JSON.stringify(ingredients, null, 4));
-
 	const filteredWasteItems = wastageData.filter((item) => {
 		const matchesSearch =
 			item.inventory_transactions.ingredients.name

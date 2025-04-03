@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import createSuperClient from "../utils/supabase/superclient";
+import { redirect } from "next/navigation";
 
 export async function addRole(role: any) {
     
@@ -12,13 +13,13 @@ export async function addRole(role: any) {
     const { data, error } = await superSupabase.auth.admin.inviteUserByEmail(
         role.email)
 
-    console.log(error?.message)
+    if (error) redirect("/error")
 
-    const { data: roleData, error: roleError } = await supabase
+    const { error: roleError } = await supabase
         .from("roles")
         .insert({"email": data.user?.email, ...role, "user_id": data.user?.id})
 
-    console.log(roleError?.message)
+    if (roleError) redirect("/error")
 
 }
 
@@ -28,9 +29,11 @@ export async function editRole(id: any, role: any) {
         .from("roles")
         .update(role)
         .eq("id", id);
+    if (error) redirect("/error")
 }
 
 export async function deleteRole(id: any) {
     const supabase = await createSuperClient()
     const { data, error } = await supabase.auth.admin.deleteUser(id);
+    if (error) redirect("/error")
 }

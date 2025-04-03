@@ -1,4 +1,5 @@
 "use server";
+import { redirect } from "next/navigation";
 import { createClient } from "../utils/supabase/server";
 
 interface SendOrderProps {
@@ -19,11 +20,8 @@ export default async function SendOrder(
 		.from("orders")
 		.insert([{ customer_name: customerName }])
 		.select("id");
-
-	if (insertOrdersError) {
-		console.error("Error inserting order: ", insertOrdersError);
-		return;
-	}
+	
+	if (insertOrdersError) redirect("/error")
 
 	const orderId = orderData[0].id;
 
@@ -37,10 +35,5 @@ export default async function SendOrder(
 		.from("order_items")
 		.insert(orderItemsData);
 
-	if (insertOrderItemsError) {
-		console.error("Error inserting order items: ", insertOrderItemsError);
-		return;
-	}
-
-	console.log("Order and order items inserted successfully");
+	if (insertOrderItemsError) redirect("/error")
 }

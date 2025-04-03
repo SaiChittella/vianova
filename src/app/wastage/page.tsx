@@ -53,6 +53,7 @@ import { Progress } from "@/components/ui/progress";
 import Sidebar from "@/components/Sidebar";
 import { createClient } from "@/lib/utils/supabase/server";
 import WasteLog from "./wasteLog";
+import { redirect } from "next/navigation";
 
 export default async function WastageServer() {
 	const supabase = await createClient();
@@ -61,28 +62,15 @@ export default async function WastageServer() {
 		.from("wastages")
 		.select("*, inventory_transactions!inner(*, ingredients!inner(*))");
 
-	const { data: ingredients, error: ingredientsError } = await supabase
+	if (wastageDataError) redirect("/error")
+		
+		const { data: ingredients, error: ingredientsError } = await supabase
 		.from("ingredients")
 		.select("*");
+		
+	if (ingredientsError || !wastageData) redirect("/error")
 
-	if (ingredientsError) {
-		console.error("Error fetching ingredients data:", ingredientsError);
-		return;
-	}
-
-	if (wastageDataError) {
-		console.error("Error fetching wastage data:", wastageDataError);
-	}
-
-	if (!wastageData) {
-		console.error("No wastage data found");
-		return null;
-	}
-
-	let totalWaste = 0,
-		totalCost = 0;
-
-	// console.log(wastageData)
+	let totalWaste = 0, totalCost = 0;
 
 	for (let i = 0; i < wastageData.length; i++) {
 		totalWaste +=
@@ -94,7 +82,6 @@ export default async function WastageServer() {
 	}
 
 	const reason = findHighestWasteReason(countWasteReasons(wastageData));
-	console.log(reason);
 
 	return (
 		<div className="flex min-h-screen bg-white">
@@ -169,6 +156,8 @@ export default async function WastageServer() {
 		</div>
 	);
 }
+
+// TODO: Move this to a utils file
 
 function countWasteReasons(data: any[]): Record<string, number> {
 	const wasteTypes = [

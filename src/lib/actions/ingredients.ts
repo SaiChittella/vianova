@@ -1,5 +1,6 @@
 "use server";
 import { createClient } from "@/lib/utils/supabase/server";
+import { redirect } from "next/navigation";
 
 export async function addIngredient(ingredientsData: any, quantity: number) {
 	const supabase = await createClient();
@@ -10,43 +11,34 @@ export async function addIngredient(ingredientsData: any, quantity: number) {
 		.select("id")
 		.single();
 
+	if (insertIngredientsError) redirect("/error")
+
 	const transaction = {
 		transaction_type: "adjustment",
 		quantity_change: quantity,
 		ingredient_id: ingredientId?.id,
 	};
 
-	if (insertIngredientsError) {
-		console.error(
-			"Error inserting data:  " +
-			JSON.stringify(insertIngredientsError, null, 4)
-		);
-		return;
-	}
 
 	const { error: insertInventoryTransactionError } = await supabase
 		.from("inventory_transactions")
 		.insert(transaction);
 
-	if (insertInventoryTransactionError) {
-		console.error(
-			"Error inserting inventory transaction data:  " +
-			JSON.stringify(insertInventoryTransactionError, null, 4)
-		);
-		return;
-	}
+	if (insertInventoryTransactionError) redirect("/error")
 }
 
 export async function editIngredient(id: any, ingredient: any, quantity: number) {
 
 	const supabase = await createClient();
 
-	await supabase.from("ingredients").update(ingredient).eq("id", id);
+	const {error: updateError } = await supabase.from("ingredients").update(ingredient).eq("id", id);
+	if (updateError) redirect("/error")
 
 	const { data, error } = await supabase
 		.from("inventory_transactions")
 		.select("quantity_change")
 		.eq("ingredient_id", id);
+	if (error) redirect("/error")
 
 	let sum = 0;
 	data?.map((item) => {
@@ -62,6 +54,8 @@ export async function editIngredient(id: any, ingredient: any, quantity: number)
 		const { error: insertInventoryTransactionError } = await supabase
 			.from("inventory_transactions")
 			.insert(transaction);
+		
+		if (insertInventoryTransactionError) redirect("/error")
 	}
 
 }
@@ -70,5 +64,6 @@ export async function deleteIngredient(id: number) {
 
 	const supabase = await createClient();
 
-	await supabase.from("ingredients").delete().eq("id", id);
+	const { error } =await supabase.from("ingredients").delete().eq("id", id);
+	if (error) redirect("/error")
 }

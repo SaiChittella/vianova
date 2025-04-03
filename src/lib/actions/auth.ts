@@ -18,9 +18,7 @@ export async function login(formData: FormData) {
 
 	const { error } = await supabase.auth.signInWithPassword(data);
 
-	if (error) {
-		redirect("/error");
-	}
+	if (error) redirect("/error");
 
 	revalidatePath("/", "layout");
 	redirect("/dashboard");
@@ -38,6 +36,8 @@ export async function signup(formData: FormData) {
 
 	const { data: userData, error } = await supabase.auth.signUp(data);
 
+	if (error) redirect("/error")
+
 	const { data: restaurantData, error: insertError } = await supabase
 		.from("restaurants")
 		.insert({
@@ -46,22 +46,17 @@ export async function signup(formData: FormData) {
 		})
 		.select()
 		.single();
-
+	
+	if (insertError) redirect("/error");
+	
 	// TODO: Add email to roles
 	const { error: userError } = await supabase.from("roles").insert({
 		user_id: userData.user?.id,
 		role: "admin",
 		restaurant_id: restaurantData?.id,
 	});
-
-	if (userError) {
-		// TODO: Handle Errors
-		alert("Error: " + userError);
-	}
-
-	if (error) {
-		redirect("/error");
-	}
+	
+	if (userError) redirect("/error");
 
 	revalidatePath("/", "layout");
 	redirect("/");
