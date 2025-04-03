@@ -42,11 +42,24 @@ export default function IngredientDialog({ open, setOpen, title, description, bu
 	});
 
 	const handleSubmit = async () => {
+<<<<<<< HEAD:src/components/AddItems.tsx
+		if (
+			newItem.low_inventory_threshold > newItem.medium_inventory_threshold
+		) {
+			alert(
+				"Cannot have low threshold greater than medium threshold, please try again."
+			);
+			return;
+		}
+		await updateInventory(newItem);
+		setAddItemDialogOpen(false);
+=======
 		const cleanedObj = Object.fromEntries(
 			Object.entries(newItem).filter(([_, value]) => value !== "")
 		);
 		await serverAction(cleanedObj, parseInt(quantity))
 		setOpen(false);
+>>>>>>> 31caa985b08c8de6968dd6230392af7dc1d42d5c:src/components/Ingredients/IngredientDialog.tsx
 	};
 
 	return (
