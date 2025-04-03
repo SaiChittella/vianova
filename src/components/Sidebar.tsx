@@ -20,6 +20,8 @@ export default function Sidebar() {
 					src="/vianova_logo.svg"
 					alt="Vianova Logo"
 					className="h-20 w-20"
+					width={0}
+					height={0}
 				/>
 			</div>
 
