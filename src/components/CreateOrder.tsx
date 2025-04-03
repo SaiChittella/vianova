@@ -29,9 +29,10 @@ import {
 	TableRow,
 } from "./ui/table";
 import sendOrder from "@/lib/actions/sendOrder";
+import { MenuItem } from "@/lib/types";
 
 interface CreateOrderProps {
-	menuItems: any[];
+	menuItems: MenuItem[];
 }
 
 export default function CreateOrder({ menuItems }: CreateOrderProps) {
@@ -39,11 +40,11 @@ export default function CreateOrder({ menuItems }: CreateOrderProps) {
 	const [customerName, setCustomerName] = useState("");
 
 	const [orderItems, setOrderItems] = useState([
-		{ id: 1, name: "", quantity: 0, unit: "lbs", price: 0 },
+		{ quantity: 0, menu_item_id: menuItems[0]?.id },
 	]);
 
 	const [selectedMenuItems, setSelectedMenuItems] = useState<{
-		[key: number]: any;
+		[key: number]: MenuItem;
 	}>({});
 
 	const calculateSubtotal = () => {
@@ -54,18 +55,18 @@ export default function CreateOrder({ menuItems }: CreateOrderProps) {
 		}, 0);
 	};
 
+	function getMenuItemById(id: string) {
+		return menuItems.find((item) => item.id === id);
+	}
+
 	const handleSubmit = async () => {
 		await sendOrder(orderItems, customerName);
 
 		setCreateOrderDialogOpen(false);
-		setOrderItems([
-			{
-				id: 1,
-				name: "",
-				quantity: 0,
-				unit: "lbs",
-				price: 0,
-			},
+		setOrderItems([{
+			quantity: 0,
+			menu_item_id: menuItems[0]?.id
+		}
 		]);
 	};
 
@@ -117,11 +118,8 @@ export default function CreateOrder({ menuItems }: CreateOrderProps) {
 									setOrderItems([
 										...orderItems,
 										{
-											id: orderItems.length + 1,
-											name: "",
 											quantity: 0,
-											unit: "lbs",
-											price: 0,
+											menu_item_id: menuItems[0]?.id
 										},
 									]);
 								}}
@@ -151,46 +149,16 @@ export default function CreateOrder({ menuItems }: CreateOrderProps) {
 								</TableHeader>
 								<TableBody>
 									{orderItems.map((item, index) => (
-										<TableRow key={item.id}>
+										<TableRow key={index}>
 											<TableCell>
 												<Select
 													onValueChange={(value) => {
-														const selectedItem =
-															menuItems.find(
-																(menu) =>
-																	menu.id ===
-																	value
-															);
+														const selectedItem = getMenuItemById(value);
 
 														if (selectedItem) {
-															setSelectedMenuItems(
-																(prev) => ({
-																	...prev,
-																	[index]:
-																		selectedItem,
-																})
-															);
+															setSelectedMenuItems((prev) => ({...prev,[index]:selectedItem}));
 
-															setOrderItems(
-																(
-																	prevOrderItems
-																) =>
-																	prevOrderItems.map(
-																		(
-																			orderItem,
-																			i
-																		) =>
-																			i ===
-																			index
-																				? {
-																						...orderItem,
-																						id: selectedItem.id,
-																						name: selectedItem.name,
-																						price: selectedItem.price,
-																				  }
-																				: orderItem
-																	)
-															);
+															setOrderItems( ( prevOrderItems ) => prevOrderItems.map( ( orderItem, i ) => i === index ? { ...orderItem, menu_item_id: value } : orderItem ) )
 														}
 													}}
 												>
@@ -200,14 +168,7 @@ export default function CreateOrder({ menuItems }: CreateOrderProps) {
 													<SelectContent>
 														{menuItems.map(
 															(menu) => (
-																<SelectItem
-																	value={
-																		menu.id
-																	}
-																	key={
-																		menu.id
-																	}
-																>
+																<SelectItem value={menu.id} key={menu.id}>
 																	{menu.name}
 																</SelectItem>
 															)
@@ -221,27 +182,8 @@ export default function CreateOrder({ menuItems }: CreateOrderProps) {
 													placeholder="0"
 													value={item.quantity}
 													onChange={(e) => {
-														const updatedQuantity =
-															parseFloat(
-																e.target.value
-															) || 0;
-														setOrderItems(
-															(prevOrderItems) =>
-																prevOrderItems.map(
-																	(
-																		orderItem,
-																		i
-																	) =>
-																		i ===
-																		index
-																			? {
-																					...orderItem,
-																					quantity:
-																						updatedQuantity,
-																			  }
-																			: orderItem
-																)
-														);
+														const updatedQuantity = parseFloat( e.target.value ) || 0
+														setOrderItems( (prevOrderItems) => prevOrderItems.map( ( orderItem, i ) => i === index ? { ...orderItem, quantity: updatedQuantity, } : orderItem ) );
 													}}
 												/>
 											</TableCell>
@@ -252,33 +194,17 @@ export default function CreateOrder({ menuItems }: CreateOrderProps) {
 														$
 													</span>
 													<p>
-														{selectedMenuItems[
-															index
-														]?.price || "N/A"}
+														{selectedMenuItems[index]?.price || "N/A"}
 													</p>
 												</div>
 											</TableCell>
 											<TableCell>
-												<Button
-													variant="ghost"
-													size="icon"
-													onClick={() => {
-														if (
-															orderItems.length >
-															1
-														) {
-															setOrderItems(
-																orderItems.filter(
-																	(_, i) =>
-																		i !==
-																		index
-																)
-															);
-														}
-													}}
-													disabled={
-														orderItems.length === 1
+												<Button variant="ghost" size="icon" onClick={() => {
+													if ( orderItems.length > 1 ) {
+														setOrderItems( orderItems.filter( (_, i) => i !== index ) )
 													}
+												}}
+													disabled={orderItems.length === 1}
 												>
 													<MinusCircle className="h-4 w-4 text-red-500" />
 												</Button>

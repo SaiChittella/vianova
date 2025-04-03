@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "../ui/input";
 import { useState } from "react";
+import { Ingredient, InsertIngredient } from "@/lib/types";
 
 interface AddItemsProps {
 	open: boolean,
@@ -27,7 +28,7 @@ interface AddItemsProps {
 	title: string,
 	description: string,
 	buttonText: string,
-	serverAction: (ingredient: any, quantity: number) => Promise<void>,
+	serverAction: (ingredient: InsertIngredient, quantity: number) => Promise<void>,
 }
 
 export default function IngredientDialog({ open, setOpen, title, description, buttonText, serverAction }: AddItemsProps) {
@@ -42,10 +43,21 @@ export default function IngredientDialog({ open, setOpen, title, description, bu
 	});
 
 	const handleSubmit = async () => {
+		// Filter out empty fields
 		const cleanedObj = Object.fromEntries(
 			Object.entries(newItem).filter(([_, value]) => value !== "")
 		);
-		await serverAction(cleanedObj, parseInt(quantity))
+
+		const ingredient: InsertIngredient = {
+			name: cleanedObj.name as string,
+			description: cleanedObj.description as string,
+			unit_of_measure: cleanedObj.unit_of_measure as string,
+			cost_per_unit: parseFloat(cleanedObj.cost_per_unit as string) || 0,
+			low_inventory_threshold: parseInt(cleanedObj.low_inventory_threshold as string) || 0,
+			medium_inventory_threshold: parseInt(cleanedObj.medium_inventory_threshold as string) || 0,
+		};
+
+		await serverAction(ingredient, parseInt(quantity) || 0);
 		setOpen(false);
 	};
 

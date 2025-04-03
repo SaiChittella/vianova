@@ -13,25 +13,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { InsertRoles } from '@/lib/types'
 
 interface MenuItemDialog {
   open: boolean,
   setOpen: (open: boolean) => void,
-  serverAction: (role: any) => void,
+  serverAction: (role: InsertRoles) => void,
   title: string,
   description: string,
   buttonText: string,
   constantEmail?: boolean
 }
 
-export default function MenuItemDialog({ open, setOpen, serverAction, title, description, buttonText, constantEmail }: MenuItemDialog) {
+export default function RoleDialog({ open, setOpen, serverAction, title, description, buttonText, constantEmail }: MenuItemDialog) {
 
-  const [role, setRole] = useState("staff")
+  const [role, setRole] = useState<"staff" | "manager" | "admin">("staff")
 
   const [email, setEmail] = useState("someone@gmail.com")
   
   async function handleSubmit() {
-    await serverAction({"role": role, "email": email})
+    await serverAction({role: role, "email": email})
     setOpen(false)
   }
 
@@ -62,7 +63,7 @@ export default function MenuItemDialog({ open, setOpen, serverAction, title, des
                       <Button variant="outline">{role}</Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56">
-                      <DropdownMenuRadioGroup value={role} onValueChange={setRole}>
+                      <DropdownMenuRadioGroup value={role} onValueChange={(e) => setRole(e as "staff" | "manager" | "admin")}>
                         <DropdownMenuRadioItem value="admin">admin</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="manager">manager</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="staff">staff</DropdownMenuRadioItem>

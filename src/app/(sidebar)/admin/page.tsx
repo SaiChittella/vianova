@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { createClient } from "@/lib/utils/supabase/server"
 import RecentActivity from "@/components/RecentActivity"
 import { redirect } from "next/navigation"
+import { InventoryTransaction } from "@/lib/types"
 
 export default async function AdminDashboard() {
 
@@ -33,12 +34,12 @@ export default async function AdminDashboard() {
         error: inventoryTransactionError,
     } = await supabase
         .from("inventory_transactions")
-        .select("*, ingredients(name, unit_of_measure)");
+        .select("*, ingredients!inner(*)");
 
     if (inventoryTransactionError) redirect("/error")
         
     inventoryTransactionsData?.sort(
-        (a: any, b: any) =>
+        (a: InventoryTransaction, b: InventoryTransaction) =>
             new Date(b.transaction_date).getTime() -
             new Date(a.transaction_date).getTime()
     );
@@ -52,7 +53,7 @@ export default async function AdminDashboard() {
                         <ShieldCheck className="h-8 w-8 text-[#2e6930] mr-3" />
                         <h1 className="text-4xl font-medium text-[#2e6930]">Admin Dashboard</h1>
                     </div>
-                    <p className="text-gray-500 mt-1">Manage your restaurant's ingredients, menu, recipes, and staff.</p>
+                    <p className="text-gray-500 mt-1">{"Manage your restaurant's ingredients, menu, recipes, and staff."}</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -154,10 +155,7 @@ export default async function AdminDashboard() {
                     <CardContent className="space-y-4">
                         <div className="space-y-4 text-sm">
                             <RecentActivity
-                                initialData={inventoryTransactionsData?.slice(
-                                    0,
-                                    4
-                                )}
+                                initialData={inventoryTransactionsData.slice(0,4)}
                                 fullData={inventoryTransactionsData}
                             />
                         </div>

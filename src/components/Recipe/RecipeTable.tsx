@@ -8,11 +8,12 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '.
 import DeleteDialog from '../DeleteDialog'
 import RecipeDialog from './RecipeDialog'
 import { addRecipe, editRecipe, deleteRecipe } from '@/lib/actions/recipes'
+import { CompleteRecipe, Ingredient, MenuItem, Recipe } from '@/lib/types'
 
 interface RecipeProps {
-  menuItem: any
-  recipes: any[],
-  ingredients: any[]
+  menuItem: MenuItem
+  recipes: CompleteRecipe[],
+  ingredients: Ingredient[]
 }
 
 export default function RecipeTable({ recipes, menuItem, ingredients }: RecipeProps) {
@@ -21,7 +22,7 @@ export default function RecipeTable({ recipes, menuItem, ingredients }: RecipePr
   const [addRecipeDialog, setAddRecipeDialog] = useState(false)
   const [editRecipeDialog, setEditRecipeDialog] = useState(false)
   const [deleteConfirmDialog, setDeleteConfirmDialog] = useState(false)
-  const [selectedIngredient, setSelected] = useState<any>(null)
+  const [selectedRecipe, setSelectedRecipe] = useState<CompleteRecipe>(recipes[0])
 
   // Filter recipes based on search query and active tab
   const filteredRecipes = recipes.filter((recipe) => {
@@ -33,14 +34,14 @@ export default function RecipeTable({ recipes, menuItem, ingredients }: RecipePr
   }
 
   // Handle edit recipe
-  const handleEditRecipe = async (recipe: any) => {
-    setSelected(recipe)
+  const handleEditRecipe = async (recipe: CompleteRecipe) => {
+    setSelectedRecipe(recipe)
     setEditRecipeDialog(true)
   }
 
   // Handle delete recipe
-  const handleDeleteRecipe = async (recipe: any) => {
-    setSelected(recipe)
+  const handleDeleteRecipe = async (recipe: CompleteRecipe) => {
+    setSelectedRecipe(recipe)
     setDeleteConfirmDialog(true)
   }
 
@@ -93,7 +94,7 @@ export default function RecipeTable({ recipes, menuItem, ingredients }: RecipePr
                     <TableCell>{item.ingredients.description}</TableCell>
                     <TableCell>${item.ingredients.cost_per_unit} per {item.ingredients.unit_of_measure}</TableCell>
                     <TableCell>{item.quantity ?? "1"}</TableCell>
-                    <TableCell>${item.ingredients.quantity ?? 1 * item.ingredients.cost_per_unit}</TableCell>
+                    <TableCell>${item.ingredients.cost_per_unit ?? 1 * item.ingredients.cost_per_unit}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Button
@@ -127,11 +128,11 @@ export default function RecipeTable({ recipes, menuItem, ingredients }: RecipePr
       </Card>
 
 
-      <DeleteDialog open={deleteConfirmDialog} setOpen={setDeleteConfirmDialog} title={'Confirm Deletion'} message={`Are you sure you want to delete ${selectedIngredient?.ingredients.name} from the recipe?`} buttonText={'Delete Ingredient'} serverAction={deleteRecipe.bind(null, selectedIngredient?.id)} />
+      <DeleteDialog open={deleteConfirmDialog} setOpen={setDeleteConfirmDialog} title={'Confirm Deletion'} message={`Are you sure you want to delete ${selectedRecipe?.ingredients.name} from the recipe?`} buttonText={'Delete Ingredient'} serverAction={deleteRecipe.bind(null, selectedRecipe?.id)} />
 
       <RecipeDialog open={addRecipeDialog} setOpen={setAddRecipeDialog} title={'Add Recipe'} description={'To add a recipe item, fill in the info below.'} buttonText={'Add Recipe'} menuItem={menuItem} serverAction={addRecipe} ingredientItems={ingredients}/>
 
-      <RecipeDialog open={editRecipeDialog} setOpen={setEditRecipeDialog} title={'Edit Recipe'} description={'To edit a recipe item, fill in the info below'} buttonText={'Edit Recipe'} serverAction={editRecipe.bind(null, selectedIngredient?.id)} menuItem={menuItem} ingredientItems={ingredients} />
+      <RecipeDialog open={editRecipeDialog} setOpen={setEditRecipeDialog} title={'Edit Recipe'} description={'To edit a recipe item, fill in the info below'} buttonText={'Edit Recipe'} serverAction={editRecipe.bind(null, selectedRecipe?.id)} menuItem={menuItem} ingredientItems={ingredients} />
 
     </>
   )

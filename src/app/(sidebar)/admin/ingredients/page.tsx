@@ -8,7 +8,7 @@ export default async function IngredientsManagement() {
 
     const supabase = await createClient()
 
-    const { data: ingredients, error } = await supabase.from("ingredients").select("id, name, description, unit_of_measure, cost_per_unit")
+    const { data: ingredients, error } = await supabase.from("ingredients").select()
 
     if (error) redirect("/error")
 
@@ -32,7 +32,7 @@ export default async function IngredientsManagement() {
             {/* <IngredientsTable /> */}
 
 
-            <IngredientsTable ingredients={ingredients!} />
+            <IngredientsTable ingredients={ingredients} />
 
 
 

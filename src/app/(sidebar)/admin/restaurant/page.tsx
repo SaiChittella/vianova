@@ -33,7 +33,7 @@ export default async function page() {
                         <Store className="h-8 w-8 text-[#2e6930] mr-3" />
                         <h1 className="text-4xl font-medium text-[#2e6930]">Restaurant Settings</h1>
                     </div>
-                    <p className="text-gray-500 mt-1">Manage your restaurant's information and configuration.</p>
+                    <p className="text-gray-500 mt-1">{"Manage your restaurant's information and configuration."}</p>
                 </div>
 
                 <RestaurantForm restaurant={restaurant} editRestaurant={editRestaurant} deleteRestaurant={deleteRestaurant}></RestaurantForm>

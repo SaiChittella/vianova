@@ -17,9 +17,10 @@ import DeleteDialog from "@/components/DeleteDialog"
 import IngredientDialog from "./IngredientDialog"
 
 import { addIngredient, editIngredient, deleteIngredient} from "@/lib/actions/ingredients"
+import { Ingredient } from "@/lib/types"
 
 interface IngredientsTableProps {
-    ingredients: any[]
+    ingredients: Ingredient[]
 }
 
 export default function IngredientsTable({ ingredients }: IngredientsTableProps) {
@@ -28,26 +29,24 @@ export default function IngredientsTable({ ingredients }: IngredientsTableProps)
     const [addIngredientDialog, setAddIngredientDialog] = useState(false)
     const [editIngredientDialog, setEditIngredientDialog] = useState(false)
     const [deleteIngredientDialog, setDeleteIngredientDialog] = useState(false)
-    const [selectedIngredientDialog, setSelectedIngredientDialog] = useState<any>(null)
+    const [selectedIngredientDialog, setSelectedIngredientDialog] = useState<Ingredient | null>(null)
 
     // Filter ingredients based on search query and active tab
     const filteredIngredients = ingredients.filter((ingredient) => {
         const matchesSearch =
-            ingredient.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            ingredient.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            ingredient.supplier.toLowerCase().includes(searchQuery.toLowerCase())
+            ingredient.name.toLowerCase().includes(searchQuery.toLowerCase())
 
         return matchesSearch
     })
 
     // Handle edit ingredient
-    const handleEditIngredient = (ingredient: any) => {
+    const handleEditIngredient = (ingredient: Ingredient) => {
         setSelectedIngredientDialog(ingredient)
         setEditIngredientDialog(true)
     }
 
     // Handle delete ingredient
-    const handleDeleteIngredient = (ingredient: any) => {
+    const handleDeleteIngredient = (ingredient: Ingredient) => {
         setSelectedIngredientDialog(ingredient)
         setDeleteIngredientDialog(true)
     }

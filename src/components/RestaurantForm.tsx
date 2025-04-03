@@ -15,11 +15,12 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { Restaurant, InsertRestaurant, UpdateRestaurant } from "@/lib/types";
 
 interface RestaurantFormProps {
-    restaurant: any;
-    editRestaurant: (restaurant: any) => Promise<void>;
-    deleteRestaurant: (id: any) => Promise<void>;
+    restaurant: Restaurant,
+    editRestaurant: (id: string, restaurant: UpdateRestaurant) => Promise<void>;
+    deleteRestaurant: (id: string) => Promise<void>;
 }
 
 export default function RestaurantForm({ restaurant, editRestaurant, deleteRestaurant }: RestaurantFormProps) {
@@ -30,7 +31,9 @@ export default function RestaurantForm({ restaurant, editRestaurant, deleteResta
     const [address, setAddress] = useState(restaurant.address || "");
 
     async function handleSave() {
-        await editRestaurant({ id: restaurant.id, name, email, phone_number: phone, address });
+
+        const edittedRestaurant: UpdateRestaurant = { name: name, email: email, phone_number: phone, address: address }
+        await editRestaurant(restaurant.id, edittedRestaurant);
     }
 
     async function handleDelete() {
@@ -43,7 +46,7 @@ export default function RestaurantForm({ restaurant, editRestaurant, deleteResta
             <Card className="border border-[#e8f2e8] rounded-2xl">
                 <CardHeader>
                     <CardTitle className="text-[#2e6930] text-xl">Restaurant Information</CardTitle>
-                    <CardDescription>Update your restaurant's basic information.</CardDescription>
+                    <CardDescription>{"Update your restaurant's basic information."}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

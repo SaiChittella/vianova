@@ -8,6 +8,7 @@ import countStock from "@/lib/utils/countInventory";
 import RecentActivity from "@/components/RecentActivity";
 import CreateOrder from "@/components/CreateOrder";
 import { redirect } from "next/navigation";
+import { CompleteInventoryTransaction, InventoryTransaction } from "@/lib/types";
 
 export default async function InventoryServer() {
 	let lowStockCount = 0,
@@ -19,12 +20,12 @@ export default async function InventoryServer() {
 		data: { user }, error: userError
 	} = await supabase.auth.getUser();
 
-	if (userError) redirect("/error");
+	if (userError || !user) redirect("/error");
 
 	const { data: roleData, error: roleError } = await supabase
 		.from("roles")
 		.select()
-		.eq("user_id", user?.id)
+		.eq("user_id", user.id)
 		.single();
 
 	if (roleError) redirect("/error");
@@ -33,7 +34,7 @@ export default async function InventoryServer() {
 
 	const { data: inventoryData, error: inventoryError } = await supabase
 		.from("ingredients")
-		.select("*, inventory_transactions(quantity_change)");
+		.select("*, inventory_transactions(*)");
 
 	if (inventoryError) redirect("/error")
 
@@ -48,19 +49,19 @@ export default async function InventoryServer() {
 		error: inventoryTransactionError,
 	} = await supabase
 		.from("inventory_transactions")
-		.select("*, ingredients(name, unit_of_measure)");
+		.select("*, ingredients(*)");
 
 	if (inventoryTransactionError) redirect("/error");
 
 	if (inventoryData) {
 		for (let i = 0; i < inventoryData?.length; i++) {
-			let quantitySum = countStock(inventoryData[i]);
+			const quantitySum = countStock(inventoryData[i]);
 
 			if (quantitySum < inventoryData[i].low_inventory_threshold) {
 				lowStockCount++;
 			} else if (
 				quantitySum > inventoryData[i].low_inventory_threshold &&
-				quantitySum < inventoryData[i].medium_inventory_threshold
+				quantitySum < (inventoryData[i].medium_inventory_threshold ?? Number.MIN_VALUE)
 			) {
 				mediumStockCount++;
 			}
@@ -68,7 +69,7 @@ export default async function InventoryServer() {
 	}
 
 	inventoryTransactionsData.sort(
-		(a: any, b: any) =>
+		(a: CompleteInventoryTransaction, b: CompleteInventoryTransaction) =>
 			new Date(b.transaction_date).getTime() -
 			new Date(a.transaction_date).getTime()
 	);
@@ -172,11 +173,7 @@ export default async function InventoryServer() {
 							</CardHeader>
 							<CardContent className="space-y-4">
 								<div className="space-y-4 text-sm">
-									<RecentActivity
-										initialData={inventoryTransactionsData.slice(
-											0,
-											4
-										)}
+									<RecentActivity initialData={inventoryTransactionsData.slice(0,4)}
 										fullData={inventoryTransactionsData}
 									/>
 								</div>

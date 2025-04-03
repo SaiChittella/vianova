@@ -9,10 +9,11 @@ import DeleteDialog from '../DeleteDialog'
 import RolesDialog from './RolesDialog'
 
 interface RolesTableProps {
-    users: any[]
+    users: Role[]
 }
 
 import { addRole, editRole, deleteRole} from "@/lib/actions/roles"
+import { InsertRoles, Role } from '@/lib/types'
 
 export default function RolesTable({ users }: RolesTableProps) {
 
@@ -20,12 +21,12 @@ export default function RolesTable({ users }: RolesTableProps) {
     const [addRoleDialog, setAddRoleDialog] = useState(false)
     const [editRoleDialog, setEditRoleDialog] = useState(false)
     const [deleteConfirmDialog, setDeleteConfirmDialog] = useState(false)
-    const [selectedRole, setSelectedRole] = useState<any>(null)
+    const [selectedRole, setSelectedRole] = useState<Role>(users[0])
 
     // Filter roles based on search query and active tab
     const filteredRoles = users.filter((role) => {
         const matchesSearch =
-            role.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            role.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             role.role.toLowerCase().includes(searchQuery.toLowerCase())
 
 
@@ -33,19 +34,19 @@ export default function RolesTable({ users }: RolesTableProps) {
     })
 
     // Handle edit role
-    const handleAddRole = (role: any) => {
+    const handleAddRole = (role: Role) => {
         setSelectedRole(role)
         setAddRoleDialog(true)
     }
 
     // Handle edit role
-    const handleEditRole = (role: any) => {
+    const handleEditRole = (role: Role) => {
         setSelectedRole(role)
         setEditRoleDialog(true)
     }
 
     // Handle delete role
-    const handleDeleteRole = (role: any) => {
+    const handleDeleteRole = (role: Role) => {
         setSelectedRole(role)
         setDeleteConfirmDialog(true)
     }
@@ -59,7 +60,7 @@ export default function RolesTable({ users }: RolesTableProps) {
                         <div className="flex justify-between items-center">
                             <CardTitle className="text-[#2e6930] text-xl">Roles</CardTitle>
                             <div className="flex items-center gap-2">
-                                <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={handleAddRole} >
+                                <Button size="sm" className="bg-[#2e6930] hover:bg-[#1e4920]" onClick={handleAddRole.bind(null, selectedRole)} >
                                     <Plus className="h-4 w-4 mr-1" />
                                     Invite User
                                 </Button>
@@ -102,7 +103,7 @@ export default function RolesTable({ users }: RolesTableProps) {
                                                             size="icon"
                                                             className="h-8 w-8 text-[#2e6930]"
                                                             onClick={() => handleEditRole(role)}
-                                                            disabled={role.isSystem && role.name === "Admin"}
+                                                            disabled={role.role === "admin"}
                                                         >
                                                             <Pencil className="h-4 w-4" />
                                                         </Button>
@@ -111,7 +112,6 @@ export default function RolesTable({ users }: RolesTableProps) {
                                                             size="icon"
                                                             className="h-8 w-8 text-red-500"
                                                             onClick={() => handleDeleteRole(role)}
-                                                            disabled={role.isSystem}
                                                         >
                                                             <Trash2 className="h-4 w-4" />
                                                         </Button>

@@ -1,6 +1,7 @@
 "use server";
 import { redirect } from "next/navigation";
 import { createClient } from "../utils/supabase/server";
+import { InsertOrderItem } from "../types";
 
 interface SendOrderProps {
 	id: number;
@@ -11,29 +12,27 @@ interface SendOrderProps {
 }
 
 export default async function SendOrder(
-	orders: SendOrderProps[],
+	orderItems: InsertOrderItem[],
 	customerName: string
 ) {
 	const supabase = await createClient();
 
-	const { data: orderData, error: insertOrdersError } = await supabase
+	const { data: order, error: insertOrdersError } = await supabase
 		.from("orders")
 		.insert([{ customer_name: customerName }])
-		.select("id");
+		.select("id")
+		.single();
 	
 	if (insertOrdersError) redirect("/error")
 
-	const orderId = orderData[0].id;
+	orderItems.map((orderItem) => {
+		orderItem.order_id = order.id;
 
-	const orderItemsData = orders.map((order) => ({
-		order_id: orderId,
-		menu_item_id: order.id,
-		quantity: order.quantity,
-	}));
+	});
 
 	const { error: insertOrderItemsError } = await supabase
 		.from("order_items")
-		.insert(orderItemsData);
+		.insert(orderItems);
 
 	if (insertOrderItemsError) redirect("/error")
 }

@@ -18,22 +18,23 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LogWaste from "@/components/LogWaste";
+import { CompleteWastage, Ingredient, Wastage } from "@/lib/types";
 
 interface WasteLogProps {
-	wastageData: any[];
-	ingredients: any[];
+	wastageData: CompleteWastage[];
+	ingredients: Ingredient[];
 }
 
 export default function WasteLog({ wastageData, ingredients }: WasteLogProps) {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedTab, setSelectedTab] = useState("all");
-
-	const filteredWasteItems = wastageData.filter((item) => {
+	
+	const filteredWasteItems = wastageData.filter((item: CompleteWastage) => {
 		const matchesSearch =
 			item.inventory_transactions.ingredients.name
 				.toLowerCase()
 				.includes(searchQuery.toLowerCase()) ||
-			item.waste_reason.toLowerCase().includes(searchQuery.toLowerCase());
+			item.waste_reason.toLowerCase().includes(searchQuery.toLowerCase()) 
 
 		const matchesTab =
 			selectedTab === "all" ||
@@ -43,7 +44,7 @@ export default function WasteLog({ wastageData, ingredients }: WasteLogProps) {
 			(selectedTab === "quality" &&
 				item.waste_reason === "Quality Issues") ||
 			(selectedTab === "preparation" &&
-				item.reason === "Preparation Waste") ||
+				item.waste_reason === "Preparation Waste") ||
 			(selectedTab === "plate" && item.waste_reason === "Plate Waste");
 
 		return matchesSearch && matchesTab;

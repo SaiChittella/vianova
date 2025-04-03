@@ -21,9 +21,10 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import logWaste from "@/lib/actions/logWaste";
+import { Ingredient } from "@/lib/types";
 
 interface LogWasteProps {
-	ingredients: any[];
+	ingredients: Ingredient[];
 }
 
 export default function LogWaste({ ingredients }: LogWasteProps) {
