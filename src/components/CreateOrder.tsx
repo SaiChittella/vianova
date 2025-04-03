@@ -80,7 +80,7 @@ export default function CreateOrder({ menuItems }: CreateOrderProps) {
 					Create Order
 				</Button>
 			</DialogTrigger>
-			<DialogContent className="max-w-6xl max-h-[100vh] overflow-hidden flex flex-col">
+			<DialogContent className="max-h-[100vh] overflow-hidden flex flex-col">
 				<DialogHeader>
 					<DialogTitle className="text-[#2e6930] text-xl">
 						Create New Order

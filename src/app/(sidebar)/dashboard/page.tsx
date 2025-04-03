@@ -1,54 +1,95 @@
-import Sidebar from "@/components/Sidebar";
+import { Package, ShoppingBag, Trash2 } from "lucide-react";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import CreateOrder from "@/components/CreateOrder";
+import { createClient } from "@/lib/utils/supabase/server";
+import LogWaste from "@/components/LogWaste";
+import LogTransaction from "@/components/LogTransaction";
 
-export default function Dashboard() {
+export default async function Dashboard() {
+	const supabase = await createClient();
+
+	const { data: menuItemsData, error: menuItemsError } = await supabase
+		.from("menu_items")
+		.select("*");
+
+	const { data: ingredients, error: ingredientsError } = await supabase
+		.from("ingredients")
+		.select("*");
+
+	if (ingredientsError) {
+		console.error("Error fetching ingredients data:", ingredientsError);
+		return;
+	}
+
 	return (
-			<div className="space-y-3 w-full overflow-y-scroll">
-				{/* TODO: Make the screen a little bit more responsive - for mobile screens */}
-				<p className="text-[#1B5E20] font-semibold text-4xl">
-					Dashboard
-				</p>
-				<p className="text-xs text-[#90AC95] tracking-wider">
-					Your current food savings information
-				</p>
-				<div>
-					<div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 sm:grid-cols-2 gap-5 w-full mb-5">
-						<div className="border-2 rounded-4xl w-full border-[#90AC95] min-h-52">
-							<p className="text-[#1D5E1B] text-md px-5 py-4 x">
-								Waste Saved
-							</p>
-						</div>
+		<div className="flex min-h-screen bg-white ">
+			<div className="flex-1 p-8">
+				<div className="mb-8">
+					<h1 className="text-4xl font-medium text-[#2e6930]">
+						Dashboard
+					</h1>
+					<p className="text-gray-500 mt-1">
+						Quick actions for restaurant management
+					</p>
+				</div>
 
-						<div className="border-2 rounded-4xl w-full min-h-52 border-[#90AC95]">
-							<p className="text-[#1D5E1B] text-sm px-5 py-4">
-								Pounds Saved
-							</p>
-						</div>
+				<div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					<Card className="border border-[#e8f2e8] rounded-2xl">
+						<CardHeader className="pb-2">
+							<CardTitle className="text-[#2e6930] text-xl">
+								Inventory Transactions
+							</CardTitle>
+							<CardDescription>
+								Sell, adjust, or purchase ingredients
+							</CardDescription>
+						</CardHeader>
+						<CardContent className="flex flex-col items-center justify-center py-8">
+							<Package className="h-16 w-16 text-[#2e6930] mb-4" />
+							<LogTransaction
+								ingredients={ingredients}
+							></LogTransaction>
+						</CardContent>
+					</Card>
 
-						<div className="border-2 rounded-4xl w-full min-h-52 border-[#90AC95]">
-							<p className="text-[#1D5E1B] text-sm px-5 py-4">
-								Next Steps
-							</p>
-						</div>
+					<Card className="border border-[#e8f2e8] rounded-2xl">
+						<CardHeader className="pb-2">
+							<CardTitle className="text-[#2e6930] text-xl">
+								Wastage Reporting
+							</CardTitle>
+							<CardDescription>
+								Track and analyze food waste
+							</CardDescription>
+						</CardHeader>
+						<CardContent className="flex flex-col items-center justify-center py-8">
+							<Trash2 className="h-16 w-16 text-[#2e6930] mb-4" />
+							<LogWaste ingredients={ingredients} />
+						</CardContent>
+					</Card>
 
-						<div className="border-2 rounded-4xl w-full min-h-52 border-[#90AC95]">
-							<p className="text-[#1D5E1B] text-sm px-5 py-4">
-								Upload Menu
-							</p>
-						</div>
-					</div>
-					<div className="grid lg:grid-cols-4 md:grid-cols-1 grid-cols-1 sm:grid-cols-2 gap-5">
-						<div className="border-2 rounded-4xl w-full border-[#90AC95] min-h-96 col-span-3">
-							<p className="text-[#1D5E1B] text-md px-5 py-4 w-full">
-								Overview
-							</p>
-						</div>
-						<div className="border-2 rounded-4xl w-full border-[#90AC95] min-h-52">
-							<p className="text-[#1D5E1B] text-md px-5 py-4 w-full">
-								Recent Changes
-							</p>
-						</div>
-					</div>
+					<Card className="border border-[#e8f2e8] rounded-2xl">
+						<CardHeader className="pb-2">
+							<CardTitle className="text-[#2e6930] text-xl">
+								Customer Ordering
+							</CardTitle>
+							<CardDescription>
+								Manage customer orders and tables
+							</CardDescription>
+						</CardHeader>
+						<CardContent className="flex flex-col items-center justify-center py-8">
+							<ShoppingBag className="h-16 w-16 text-[#2e6930] mb-4" />
+							<CreateOrder
+								menuItems={menuItemsData!}
+							></CreateOrder>
+						</CardContent>
+					</Card>
 				</div>
 			</div>
+		</div>
 	);
 }

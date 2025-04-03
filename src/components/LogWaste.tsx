@@ -1,16 +1,8 @@
+"use client";
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
 	Select,
 	SelectContent,
@@ -54,7 +46,7 @@ export default function LogWaste({ ingredients }: LogWasteProps) {
 			<DialogTrigger asChild>
 				<Button
 					size="sm"
-					className="bg-[#2e6930] hover:bg-[#1e4920] hover:cursor-pointer"
+					className="w-full bg-[#2e6930] hover:bg-[#1e4920] hover:cursor-pointer"
 				>
 					<Plus className="h-4 w-4 mr-1" />
 					Log Waste

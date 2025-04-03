@@ -2,10 +2,6 @@
 import { useState } from "react";
 import {
 	ArrowUpDown,
-	ChevronDown,
-	Download,
-	Filter,
-	Plus,
 	Search,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -21,31 +17,6 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
 import LogWaste from "@/components/LogWaste";
 
 interface WasteLogProps {
@@ -56,8 +27,6 @@ interface WasteLogProps {
 export default function WasteLog({ wastageData, ingredients }: WasteLogProps) {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedTab, setSelectedTab] = useState("all");
-
-	console.log("WASTAGE DATA: " + JSON.stringify(ingredients, null, 4));
 
 	const filteredWasteItems = wastageData.filter((item) => {
 		const matchesSearch =
