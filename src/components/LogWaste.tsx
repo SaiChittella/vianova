@@ -1,24 +1,9 @@
 import { useState } from "react";
-import {
-	ArrowUpDown,
-	ChevronDown,
-	Download,
-	Filter,
-	Plus,
-	Search,
-} from "lucide-react";
+import { Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
 	DropdownMenu,
@@ -46,18 +31,17 @@ import { Label } from "@/components/ui/label";
 import logWaste from "@/lib/actions/logWaste";
 
 interface LogWasteProps {
-	menuItems: any[];
+	ingredients: any[];
 }
 
-export default function LogWaste({ menuItems }: LogWasteProps) {
+export default function LogWaste({ ingredients }: LogWasteProps) {
 	const [addWasteDialogOpen, setAddWasteDialogOpen] = useState(false);
 
 	const [wastedItems, setWastedItems] = useState({
 		name: "",
 		quantity: 0,
-		unit_of_measure: "lbs",
 		waste_reason: "",
-		menu_items_id: "",
+		ingredient_id: "",
 	});
 
 	const handleSubmit = async () => {
@@ -87,22 +71,28 @@ export default function LogWaste({ menuItems }: LogWasteProps) {
 					</DialogDescription>
 				</DialogHeader>
 				<div className="grid gap-4 py-4">
-					<div className="grid grid-cols-2 gap-4">
+					<div className="grid grid-cols-1 gap-4">
 						<div className="space-y-2">
 							<Label htmlFor="item">Food Item</Label>
 							<Select
-								onValueChange={(value) =>
+								onValueChange={(value) => {
+									const selectedIngredient = ingredients.find(
+										(item) => item.id === value
+									);
 									setWastedItems((prev) => ({
 										...prev,
-										menu_items_id: value,
-									}))
-								}
+										ingredient_id: value,
+										name: selectedIngredient
+											? selectedIngredient.name
+											: "",
+									}));
+								}}
 							>
 								<SelectTrigger>
 									<SelectValue placeholder="Select item" />
 								</SelectTrigger>
 								<SelectContent>
-									{menuItems.map((item) => (
+									{ingredients.map((item) => (
 										<SelectItem
 											key={item.id}
 											value={item.id}
@@ -114,7 +104,7 @@ export default function LogWaste({ menuItems }: LogWasteProps) {
 							</Select>
 						</div>
 					</div>
-					<div className="grid grid-cols-2 gap-4">
+					<div className="grid grid-cols-1 gap-4">
 						<div className="space-y-2">
 							<Label htmlFor="quantity">Quantity</Label>
 							<Input
@@ -130,35 +120,8 @@ export default function LogWaste({ menuItems }: LogWasteProps) {
 								}
 							/>
 						</div>
-						<div className="space-y-2">
-							<Label htmlFor="unit">Unit</Label>
-							<Select
-								onValueChange={(value) =>
-									setWastedItems((prev) => ({
-										...prev,
-										unit_of_measure: value,
-									}))
-								}
-							>
-								<SelectTrigger>
-									<SelectValue placeholder="Select unit" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="lbs">lbs</SelectItem>
-									<SelectItem value="kg">kg</SelectItem>
-									<SelectItem value="oz">oz</SelectItem>
-									<SelectItem value="g">g</SelectItem>
-									<SelectItem value="pieces">
-										pieces
-									</SelectItem>
-									<SelectItem value="servings">
-										servings
-									</SelectItem>
-								</SelectContent>
-							</Select>
-						</div>
 					</div>
-					<div className="grid grid-cols-2 gap-4">
+					<div className="grid grid-cols-1 gap-4">
 						<div className="space-y-2">
 							<Label htmlFor="reason">Reason for Waste</Label>
 							<Select
