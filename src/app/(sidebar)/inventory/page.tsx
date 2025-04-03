@@ -7,6 +7,7 @@ import { createClient } from "@/lib/utils/supabase/server";
 import countStock from "@/lib/utils/countInventory";
 import RecentActivity from "@/components/RecentActivity";
 import CreateOrder from "@/components/CreateOrder";
+import { redirect } from "next/navigation";
 
 export default async function InventoryServer() {
 	let lowStockCount = 0,
@@ -15,8 +16,10 @@ export default async function InventoryServer() {
 	const supabase = await createClient();
 
 	const {
-		data: { user },
+		data: { user }, error: userError
 	} = await supabase.auth.getUser();
+
+	if (userError) redirect("/error");
 
 	const { data: roleData, error: roleError } = await supabase
 		.from("roles")
@@ -24,10 +27,7 @@ export default async function InventoryServer() {
 		.eq("user_id", user?.id)
 		.single();
 
-	if (roleError) {
-		console.error("Error fetching role data:", roleError);
-		return null;
-	}
+	if (roleError) redirect("/error");
 
 	const isStaff = roleData?.role === "staff" ? true : false;
 
@@ -35,14 +35,13 @@ export default async function InventoryServer() {
 		.from("ingredients")
 		.select("*, inventory_transactions(quantity_change)");
 
-	if (inventoryError) {
-		console.error("Error fetching inventory data:", inventoryError);
-		return null;
-	}
+	if (inventoryError) redirect("/error")
 
 	const { data: menuItemsData, error: menuItemsError } = await supabase
 		.from("menu_items")
 		.select("*");
+
+	if (menuItemsError) redirect("/error");
 
 	const {
 		data: inventoryTransactionsData,
@@ -51,13 +50,7 @@ export default async function InventoryServer() {
 		.from("inventory_transactions")
 		.select("*, ingredients(name, unit_of_measure)");
 
-	if (inventoryTransactionError) {
-		console.error(
-			"Error fetching inventory transaction data:",
-			inventoryTransactionError
-		);
-		return null;
-	}
+	if (inventoryTransactionError) redirect("/error");
 
 	if (inventoryData) {
 		for (let i = 0; i < inventoryData?.length; i++) {
