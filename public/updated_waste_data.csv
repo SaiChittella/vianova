@@ -1,0 +1,11 @@
+menu_item_id;waste_reason;quantity;date;unit_of_measurement;
+f9ea1f74-b844-481d-b240-12a2585e4b36;Overproduction;3,64;2025-03-31;pieces;
+c7bee2b1-5f55-4cb0-9483-886dc957475b;Expired;3,63;2025-03-10;pieces;
+fb3e0ace-8855-4fec-be1b-a6748dd9d1ed;Expired;0,74;2025-03-25;liters;
+5d1e1a6a-5ae4-4bf9-8a82-dcc9e6f94388;Expired;1,8;2025-03-04;pieces;
+b240b20f-20b9-4d3d-8bcd-e3e118614de7;Spoilage;1,66;2025-03-18;liters;
+0e9363fb-c6b0-4f87-b0dc-3e331d71cd74;Spoilage;4,1;2025-03-18;liters;
+7f8d3c23-c95e-4598-a02a-e23702ae53a1;Spoilage;4,95;2025-03-06;liters;
+694f28a8-884e-4762-a5ab-2f508b11158d;Spoilage;4,98;2025-03-12;g;
+e2f27e4f-f11a-44a4-80ba-aa9fe02989c9;Spoilage;3,21;2025-03-07;pieces;
+7e2da941-8097-43c2-9287-59998021d876;Plate Waste;2,98;2025-03-25;pieces;
