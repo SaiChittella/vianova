@@ -61,6 +61,15 @@ export default async function WastageServer() {
 		.from("wastages")
 		.select("*, inventory_transactions!inner(*, ingredients!inner(*))");
 
+	const { data: ingredients, error: ingredientsError } = await supabase
+		.from("ingredients")
+		.select("*");
+
+	if (ingredientsError) {
+		console.error("Error fetching ingredients data:", ingredientsError);
+		return;
+	}
+
 	if (wastageDataError) {
 		console.error("Error fetching wastage data:", wastageDataError);
 	}
@@ -70,20 +79,22 @@ export default async function WastageServer() {
 		return null;
 	}
 
-	let totalWaste = 0, totalCost = 0;
+	let totalWaste = 0,
+		totalCost = 0;
 
 	// console.log(wastageData)
 
 	for (let i = 0; i < wastageData.length; i++) {
-		
-		totalWaste += wastageData[i].inventory_transactions.quantity_change * wastageData[i].inventory_transactions.ingredients.cost_per_unit;
-		totalCost += wastageData[i].inventory_transactions.quantity_change * wastageData[i].inventory_transactions.ingredients.cost_per_unit;
-
+		totalWaste +=
+			wastageData[i].inventory_transactions.quantity_change *
+			wastageData[i].inventory_transactions.ingredients.cost_per_unit;
+		totalCost +=
+			wastageData[i].inventory_transactions.quantity_change *
+			wastageData[i].inventory_transactions.ingredients.cost_per_unit;
 	}
 
-	const reason = findHighestWasteReason(countWasteReasons(wastageData))
-	console.log(reason)
-
+	const reason = findHighestWasteReason(countWasteReasons(wastageData));
+	console.log(reason);
 
 	return (
 		<div className="flex min-h-screen bg-white">
@@ -137,7 +148,9 @@ export default async function WastageServer() {
 							</CardTitle>
 						</CardHeader>
 						<CardContent>
-							<div className="text-3xl font-semibold">{reason?.reason}</div>
+							<div className="text-3xl font-semibold">
+								{reason?.reason}
+							</div>
 							<p className="text-sm text-gray-500">
 								${reason?.count} lost
 							</p>
@@ -146,7 +159,10 @@ export default async function WastageServer() {
 				</div>
 				<div>
 					<div>
-						<WasteLog wastageData={wastageData}></WasteLog>
+						<WasteLog
+							wastageData={wastageData}
+							ingredients={ingredients}
+						></WasteLog>
 					</div>
 				</div>
 			</div>
@@ -155,34 +171,47 @@ export default async function WastageServer() {
 }
 
 function countWasteReasons(data: any[]): Record<string, number> {
-	const wasteTypes = ["spoilage", "overproduction", "quality issues", "preparation waste", "expired"];
+	const wasteTypes = [
+		"spoilage",
+		"overproduction",
+		"quality issues",
+		"preparation waste",
+		"expired",
+	];
 	const wasteCount: Record<string, number> = {
-	  spoilage: 0,
-	  overproduction: 0,
-	  "quality issues": 0,
-	  "preparation waste": 0,
-	  expired: 0,
+		spoilage: 0,
+		overproduction: 0,
+		"quality issues": 0,
+		"preparation waste": 0,
+		expired: 0,
 	};
-  
-	for (const entry of data) {
-	  if (wasteTypes.includes(entry.waste_reason.toLowerCase())) {
-		wasteCount[entry.waste_reason.toLowerCase()]+= entry.inventory_transactions.quantity_change * -1 * entry.inventory_transactions.ingredients.cost_per_unit;
-	  }
-	}
-  
-	return wasteCount;
-  }
 
-  function findHighestWasteReason(wasteCounts: Record<string, number>): { reason: string; count: number } | null {
+	for (const entry of data) {
+		if (wasteTypes.includes(entry.waste_reason.toLowerCase())) {
+			wasteCount[entry.waste_reason.toLowerCase()] +=
+				entry.inventory_transactions.quantity_change *
+				-1 *
+				entry.inventory_transactions.ingredients.cost_per_unit;
+		}
+	}
+
+	return wasteCount;
+}
+
+function findHighestWasteReason(
+	wasteCounts: Record<string, number>
+): { reason: string; count: number } | null {
 	let highestReason: string | null = null;
 	let highestCount = 0;
-  
+
 	for (const [reason, count] of Object.entries(wasteCounts)) {
-	  if (count > highestCount) {
-		highestReason = reason;
-		highestCount = count;
-	  }
+		if (count > highestCount) {
+			highestReason = reason;
+			highestCount = count;
+		}
 	}
-  
-	return highestReason ? { reason: highestReason, count: highestCount } : null;
-  }
+
+	return highestReason
+		? { reason: highestReason, count: highestCount }
+		: null;
+}

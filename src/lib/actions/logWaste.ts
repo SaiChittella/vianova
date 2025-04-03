@@ -5,31 +5,42 @@ import { revalidatePath } from "next/cache";
 interface logWasteProps {
 	name: string;
 	quantity: number;
-	unit_of_measure: string;
 	waste_reason: string;
-	menu_items_id: string;
+	ingredient_id: string;
 }
 
 export default async function logWaste(wastedItem: logWasteProps) {
 	const supabase = await createClient();
 
-	const wastageData = {
-		quantity: wastedItem.quantity,
-		unit_of_measurement: wastedItem.unit_of_measure,
-		waste_reason: wastedItem.waste_reason,
-		menu_item_id: wastedItem.menu_items_id,
-	};
+	console.log(
+		"WASTAGE BEING REPORTED: " + JSON.stringify(wastedItem, null, 4)
+	);
 
-	const { error: logWasteError } = await supabase
-		.from("wastages")
-		.insert(wastageData);
+	const { data: inventoryTransactionId, error: inventoryTransactionError } =
+		await supabase
+			.from("inventory_transactions")
+			.insert({
+				quantity_change: -wastedItem.quantity,
+				ingredient_id: wastedItem.ingredient_id,
+				transaction_type: "adjustment",
+			})
+			.select("id")
+			.single();
 
-	if (logWasteError) {
-		console.error("Error logging waste: ", logWasteError);
+	if (inventoryTransactionError) {
+		console.error(
+			"Error inserting inventory transaction data:",
+			inventoryTransactionError
+		);
 		return;
 	}
-    
-	//  TODO: Need to update the transactions in inventory_transaction
+
+	const { data: wastageData, error: wastageError } = await supabase
+		.from("wastages")
+		.insert({
+			waste_reason: wastedItem.waste_reason,
+			inventory_transaction_id: inventoryTransactionId.id,
+		});
 
 	revalidatePath("/wastage");
 }

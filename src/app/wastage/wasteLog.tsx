@@ -49,12 +49,15 @@ import { Progress } from "@/components/ui/progress";
 import LogWaste from "@/components/LogWaste";
 
 interface WasteLogProps {
-	wastageData: any[]
+	wastageData: any[];
+	ingredients: any[];
 }
 
-export default function WasteLog({ wastageData }: WasteLogProps) {
+export default function WasteLog({ wastageData, ingredients }: WasteLogProps) {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedTab, setSelectedTab] = useState("all");
+
+	console.log("WASTAGE DATA: " + JSON.stringify(ingredients, null, 4));
 
 	const filteredWasteItems = wastageData.filter((item) => {
 		const matchesSearch =
@@ -67,7 +70,7 @@ export default function WasteLog({ wastageData }: WasteLogProps) {
 			selectedTab === "all" ||
 			(selectedTab === "spoilage" && item.waste_reason === "Spoilage") ||
 			(selectedTab === "overproduction" &&
-				item.reason === "Overproduction") ||
+				item.waste_reason === "Overproduction") ||
 			(selectedTab === "quality" &&
 				item.waste_reason === "Quality Issues") ||
 			(selectedTab === "preparation" &&
@@ -85,7 +88,7 @@ export default function WasteLog({ wastageData }: WasteLogProps) {
 						Waste Log
 					</CardTitle>
 					<div className="flex items-center gap-2">
-						{/* <LogWaste menuItems={menuItems}></LogWaste> */}
+						<LogWaste ingredients={ingredients}></LogWaste>
 					</div>
 				</div>
 			</CardHeader>
@@ -159,11 +162,18 @@ export default function WasteLog({ wastageData }: WasteLogProps) {
 								filteredWasteItems.map((item) => (
 									<TableRow key={item.id}>
 										<TableCell className="font-medium">
-											{item.inventory_transactions.ingredients.name}
+											{
+												item.inventory_transactions
+													.ingredients.name
+											}
 										</TableCell>
 										<TableCell>
-											{item.inventory_transactions.quantity_change * -1}{" "}
-											{item.inventory_transactions.ingredients.unit_of_measure}
+											{item.inventory_transactions
+												.quantity_change * -1}{" "}
+											{
+												item.inventory_transactions
+													.ingredients.unit_of_measure
+											}
 										</TableCell>
 										<TableCell>
 											<Badge
@@ -187,7 +197,10 @@ export default function WasteLog({ wastageData }: WasteLogProps) {
 											</Badge>
 										</TableCell>
 										<TableCell>
-											${item.inventory_transactions.ingredients.cost_per_unit.toFixed(2)}
+											$
+											{item.inventory_transactions.ingredients.cost_per_unit.toFixed(
+												2
+											)}
 										</TableCell>
 										<TableCell>
 											{new Date(
